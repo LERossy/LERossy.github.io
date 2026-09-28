@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Assignment 1</title>
+    <link rel="stylesheet" href="../style.css">
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  </head>
+
+  <body>
+    <h1>Assignment 1</h1>
+
+    <h2>Part 1: Shortest Distance Between a Point and a Function</h2>
+
+    <p>Find the distance between any point P and \(y = x^2 + 5\) &rarr; Parabola shifted up by 5</p>
+    <p>In other words, find the point on the curve where a line segment connecting P and the curve 
+        is perpendicular to the curve.</p>
+    <p>There are multiple ways to solve this problem for parabolas and any kind of function, 
+        both Numerical and Analytical. These solution methods, as well as coded equivalents 
+        for numerical algorithms are presented below.</p>
+
+    <h3>Analytical Approach</h3>
+
+    <p>Distance function:</p>
+    \[ d = \sqrt{(x - x_0)^2 + (y - y_0)^2} \]
+
+    <p>To avoid dealing with the square root, knowing both functions have the same minimium, minimize the distance squared instead:</p>
+    \[ D(x) = (x - x_0)^2 + (y - y_0)^2 \]
+
+    <p>Sub in the parabola:</p>
+    \[ D(x) = (x - x_0)^2 + (x^2 + 5 - y_0)^2 \]
+
+    <p>Differentiate \(D(x)\) to optimize:</p>
+    \[
+      \begin{aligned}
+        D'(x) &= 2(x - x_0) + 2(x^2 + 5 - y_0)(2x) \\
+        D'(x) &= 2x - 2x_0 + 4x^3 + 20x - 4xy_0 \\
+        D'(x) &= 2\left(2x^3 + (11 - 2y_0)x - x_0\right)
+      \end{aligned}
+    \]
+
+    <p>Set derivative to 0 to find minimum:</p>
+    \[ 0 = 2x^3 + (11 - 2y_0)x - x_0 \]
+
+    <p>
+      Logically, we know any solutions to this equation will be a minimum, because the
+      maximum distance between a point and any function that goes to infinity, like a
+      parabola, will be infinite.
+    </p>
+
+    <p>
+      Similarly, because we know \(D(x)\) physically represents the squared distance to a
+      function, there will have to be at least 1 real solution.
+    </p>
+
+    <p>Solve for \(x\) for the following points: \([(0,0);\ (-4,0);\ (-8,0);\ (2,0);\ (6,0)]\)</p>
+
+    <h5>1. \((0, 0)\)</h5>
+    \[
+      \begin{aligned}
+        0 &= 2x^3 + 11x \\
+        0 &= x\underbrace{(2x^2 + 11)}_{\text{complex roots}}
+      \end{aligned}
+    \]
+    \[ \therefore\ x = 0 \]
+    \[
+      \begin{aligned}
+        D(0) &= (0 - 0)^2 + (0^2 + 5 - 0)^2 \\
+        D(0) &= 25 \\
+        d(0,0) &= \sqrt{D(0)} \\
+        d &= 5
+      \end{aligned}
+    \]
+
+    <h5>2. \((-4, 0)\)</h5>
+    \[ 0 = 2x^3 + 11x + 4 \]
+    <p>Using a calculator to solve for roots:</p>
+    \[ x = -0.3555 \quad (\text{2 complex}) \]
+    \[
+      \begin{aligned}
+        D(-0.3555) &= (-0.3555 - (-4))^2 + ((-0.3555)^2 + 5 - 0)^2 \\
+                   &= 39.5622 \\
+        d(-4,0) &= \sqrt{D(-0.3555)} \\
+        d &= 6.2898
+      \end{aligned}
+    \]
+
+    <h5>3. \((-8, 0)\)</h5>
+    \[ 0 = 2x^3 + 11x + 8 \]
+    <p>Calculator:</p>
+    \[ x = -0.6721 \quad (\text{2 complex}) \]
+    \[
+      \begin{aligned}
+        D(-0.6721) &= (-0.6721 - (-8))^2 + ((-0.6721)^2 + 5 - 0)^2 \\
+                   &= 83.4194 \\
+        d(-8,0) &= \sqrt{D(-0.6721)} \\
+        d &= 9.1334
+      \end{aligned}
+    \]
+
+    <h5>4. \((2, 0)\)</h5>
+    \[ 0 = 2x^3 + 11x - 2 \]
+    <p>Calculator:</p>
+    \[ x = 0.1807 \quad (\text{2 complex}) \]
+    \[
+      \begin{aligned}
+        D(0.1807) &= (0.1807 - 2)^2 + ((0.1807)^2 + 5 - 0)^2 \\
+                  &= 28.6374 \\
+        d(2,0) &= \sqrt{D(0.1807)} \\
+        d &= 5.3514
+      \end{aligned}
+    \]
+
+    <h5>5. \((6, 0)\)</h5>
+    \[ 0 = 2x^3 + 11x - 6 \]
+    <p>Calculator:</p>
+    \[ x = 0.5199 \quad (\text{2 complex}) \]
+    \[
+      \begin{aligned}
+        D(0.5199) &= (0.5199 - 6)^2 + ((0.5199)^2 + 5 - 0)^2 \\
+                  &= 57.8075 \\
+        d(6,0) &= \sqrt{D(0.5199)} \\
+        d &= 7.6031
+      \end{aligned}
+    \]
+
+    <h5>Summary of point distances to \(y = x^2 + 5\)</h5>
+    <table class="data-table">
+      <thead>
+        <tr><th>Point</th><th>\(\mathbf{d}\)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>\((0, 0)\)</td><td>5</td></tr>
+        <tr><td>\((-4, 0)\)</td><td>6.2898</td></tr>
+        <tr><td>\((-8, 0)\)</td><td>9.1334</td></tr>
+        <tr><td>\((2, 0)\)</td><td>5.3514</td></tr>
+        <tr><td>\((6, 0)\)</td><td>7.6031</td></tr>
+      </tbody>
+    </table>
+
+    <hr>
+
+    <h3>Numerical Approach</h3>
+
+    <h4>Algorithm A: Newton-Raphson</h4>
+
+    <p>Newton-Raphson requires the second derivative of \(D(x)\), which is determined below:</p>
+
+    \[
+      \begin{aligned}
+        y &= x^2 + 5 \\
+        D(x) &= (x - x_0)^2 + (x^2 + 5 - y_0)^2 \\
+        D'(x) &= 4x^3 + (22 - 4y_0)x - 2x_0 \quad (\text{from above}) \\
+        D''(x) &= 12x^2 + 22 - 4y_0
+      \end{aligned}
+    \]
+
+    <p>
+      For the analytical approach, the distances were determined to 4 decimal places, so the
+      algorithm will be applied to that accuracy by hand. Finer accuracy can be achieved with a computer.
+    </p>
+
+    <p>Starting guess: \(x = 0\)</p>
+
+    <p>Find distance for \([(0,0);\ (-4,0);\ (-8,0);\ (2,0);\ (6,0)]\)</p>
+
+    <h5>1. \((0, 0)\)</h5>
+    \[
+      \begin{aligned}
+        x_1 &= x - \frac{D'(x)}{D''(x)} \\
+        x_1 &= 0 - \frac{4(0)^3 + (22 - 4(0))(0) - 2(0)}{12(0)^2 + 22 - 4(0)} \\
+        x_1 &= 0
+      \end{aligned}
+    \]
+    <p class="center">No change.</p>
+    <p class="center">Now calculate d:</p>
+    \[
+      \begin{aligned}
+        D(0) &= (0 - 0)^2 + (0^2 + 5 - 0)^2 = 25 \\
+        d(0,0) &= \sqrt{D(0)} \\
+        d(0,0) &= 5
+      \end{aligned}
+    \]
+
+    <h5>2. \((-4, 0)\)</h5>
+    \[
+      \begin{aligned}
+        x_1 &= 0 - \frac{4(0)^3 + (22 - 4(0))(0) - (2(-4))}{12(0)^2 + 22 - 4(0)} \\
+        x_1 &= -\frac{4}{11} = -0.36363 \\[1ex]
+        x_2 &= -\frac{4}{11} - \frac{4\left(-\frac{4}{11}\right)^3 + (22 - 4(0))\left(-\frac{4}{11}\right) + 8}{12\left(-\frac{4}{11}\right)^2 + 22 - 4(0)} \\
+        x_2 &= -0.35548 \\[1ex]
+        x_3 &= -0.35548 - \frac{4(-0.35548)^3 + 22(-0.35548) + 8}{12(-0.35548)^2 + 22} \\
+        x_3 &= -0.35547 \\
+        x_3 &\approx -0.3555
+      \end{aligned}
+    \]
+    <p class="center">From above:</p>
+    \[
+      \begin{aligned}
+        D(-0.3555) &= 39.5622 \\
+        d(-4,0) &= 6.2898
+      \end{aligned}
+    \]
+
+    <h5>3. \((-8, 0)\)</h5>
+    \[
+      \begin{aligned}
+        D'(x) &= 4x^3 + (22 - 4(0))x - 2(-8) \\
+        D'(x) &= 4x^3 + 22x + 16 \\
+        D''(x) &= 12x^2 + 22
+      \end{aligned}
+    \]
+    \[
+      \begin{aligned}
+        x_1 &= 0 - \frac{4(0)^3 + 22(0) + 16}{12(0)^2 + 22} \\
+        x_1 &= -\frac{8}{11} = -0.72727 \\[1ex]
+        x_2 &= -\frac{8}{11} - \frac{4\left(-\frac{8}{11}\right)^3 + 22\left(-\frac{8}{11}\right) + 16}{12\left(-\frac{8}{11}\right)^2 + 22} \\
+        x_2 &= -\frac{8}{11} + 0.05428 \\
+        x_2 &= -0.67299 \\[1ex]
+        x_3 &= -0.67299 - \frac{4(-0.67299)^3 + 22(-0.67299) + 16}{12(-0.67299)^2 + 22} \\
+            &= -0.67299 + 0.0009 \\
+        x_3 &= -0.67208 \\[1ex]
+        x_4 &= -0.67208 - \frac{4(-0.67208)^3 + 22(-0.67208) + 16}{12(-0.67208)^2 + 22} \\
+            &= -0.67208 + 0.000003 \\
+        x_4 &\approx -0.6721
+      \end{aligned}
+    \]
+    <p class="center">From above:</p>
+    \[
+      \begin{aligned}
+        D(-0.6721) &= 83.4194 \\
+        d(-8,0) &= 9.1334
+      \end{aligned}
+    \]
+
+    <h5>4. \((2, 0)\)</h5>
+    \[
+      \begin{aligned}
+        D'(x) &= 4x^3 + 22x - 4 \\
+        D''(x) &= 12x^2 + 22
+      \end{aligned}
+    \]
+    \[
+      \begin{aligned}
+        x_1 &= 0 - \frac{4(0)^3 + 22(0) - 4}{12(0)^2 + 22} \\
+        x_1 &= \frac{2}{11} = 0.18182 \\[1ex]
+        x_2 &= \frac{2}{11} - \frac{4\left(\frac{2}{11}\right)^3 + 22\left(\frac{2}{11}\right) - 4}{12\left(\frac{2}{11}\right)^2 + 22} \\
+        x_2 &= 0.18182 - 0.00107 \\
+        x_2 &= 0.18074 \\[1ex]
+        x_3 &= 0.18074 - \frac{4(0.18074)^3 + 22(0.18074) - 4}{12(0.18074)^2 + 22} \\
+            &= 0.18074 + 0.0000046 \\
+        x_3 &\approx 0.1807
+      \end{aligned}
+    \]
+    <p class="center">From above:</p>
+    \[
+      \begin{aligned}
+        D(0.1807) &= 28.6374 \\
+        d(2,0) &= 5.3514
+      \end{aligned}
+    \]
+
+    <h5>5. \((6, 0)\)</h5>
+    \[
+      \begin{aligned}
+        D'(x) &= 4x^3 + 22x - 12 \\
+        D''(x) &= 12x^2 + 22
+      \end{aligned}
+    \]
+    \[
+      \begin{aligned}
+        x_1 &= 0 - \frac{4(0)^3 + 22(0) - 12}{12(0)^2 + 22} \\
+        x_1 &= \frac{6}{11} = 0.54545 \\[1ex]
+        x_2 &= \frac{6}{11} - \frac{4\left(\frac{6}{11}\right)^3 + 22\left(\frac{6}{11}\right) - 12}{12\left(\frac{6}{11}\right)^2 + 22} \\
+            &= 0.54545 - 0.02539 \\
+        x_2 &= 0.52007 \\[1ex]
+        x_3 &= 0.52007 - \frac{4(0.52007)^3 + 22(0.52007) - 12}{12(0.52007)^2 + 22} \\
+            &= 0.52007 - 0.00017 \\
+        x_3 &= 0.51990 \\
+        x_3 &\approx 0.5199
+      \end{aligned}
+    \]
+    <p class="center">From above:</p>
+    \[
+      \begin{aligned}
+        D(0.5199) &= 57.8075 \\
+        d(6,0) &= 7.6031
+      \end{aligned}
+    \]
+
+    <hr class="short">
+
+    <h4>Newton-Raphson in Code</h4>
+
+    <p>The Algorithm above was implemented in Python, and run for \(f(x) = x^2 + 5\). 
+        Additional points were added to prove the code works for points in all quadrants.</p>
+
+    \[
+        \text{Points: [(0,0); (-4,0); (-8,0); (2,0); (6,0); (2,2); (-2.5,6); (0,5.4); (0,-1.3); (-5,-4)]}
+    \]
+
+    <p>After that, the algorithm was run on other kinds of functions, to prove that it works in general:</p>
+
+    \[
+      \begin{aligned}
+        g(x) &= 3x^3 - 13x^2 + x - 6 \\
+        e(x) &= -1.5e^{2x} + 0.5 \\
+        c(x) &= 2\cos(x - 1) + 1 \\
+        l(x) &= 0.5\ln(x)
+      \end{aligned}
+    \]
+
+    <h5>A Couple of Notes:</h5>
+    <p>1. For some of the functions, especially those with deeper wells like the cubic, 
+        or periodicity like cosine, the initial guess needed to be close to the true value, 
+        so the algorithm would converge to the correct value of x. This intial guess was determined through inspection.</p>
+    <p>2. For functions with restricted domain, like ln(x), the algorithm was modified to stop iterating if the next estimate of x was ever outside the domain. 
+        This also required initial guesses close to the true value, especially for points on the left of the y-axis.</p>
+
+    <hr>
+
+    <h4>Algorithm B: Golden Section Search</h4>
+    \[
+      \text{Section } [a, b] = [-10, 10] \qquad D(x) = (x - x_0)^2 + (x^2 + 5 - y_0)^2
+    \]
+    \[
+      \begin{aligned}
+        \text{phi} &\rightarrow \varphi = \frac{1 + \sqrt{5}}{2} = 1.618034 \\
+        \text{resphi} &\rightarrow \varphi_{res} = 2 - \varphi = 0.381966
+      \end{aligned}
+    \]
+    \[
+      \begin{aligned}
+        x_1 &= a + \varphi_{res}(b - a) & x_2 &= b - \varphi_{res}(b - a) \\
+            &= -10 + 0.381966(10 - (-10)) & &= 10 - 0.381966(10 - (-10)) \\
+        x_1 &= -2.36068 & &= 2.36068
+      \end{aligned}
+    \]
+
+    <p>For points \([(0,0);\ (-4,0);\ (-8,0);\ (2,0);\ (6,0)]\)</p>
+
+    <h5>1. \((0, 0) \rightarrow D(x) = x^2 + (x^2 + 5)^2\)</h5>
+
+    <p>i)</p>
+    \[
+      \begin{aligned}
+        f_{x_1} &= D(x_1) = (-2.36068)^2 + ((-2.36068)^2 + 5)^2 \\
+        D(x_1) &= 117.3571 \\
+        f_{x_2} &= D(x_2) = (2.36068)^2 + ((2.36068)^2 + 5)^2 \\
+        D(x_2) &= 117.3571
+      \end{aligned}
+    \]
+    <p>\(f_{x_1} = f_{x_2}\):</p>
+    \[
+      \begin{aligned}
+        a &= x_1 = -2.36068 \qquad f_{x_1} = f_{x_2} = 117.3571 \\
+        x_1 &= x_2 = 2.36068 \\
+        x_2 &= 10 - 0.381966(10 - (-2.36068)) \\
+        x_2 &= 5.27864
+      \end{aligned}
+    \]
+
+    <p>ii)</p>
+    \[
+      \begin{aligned}
+        f_{x_2} &= D(x_2) = (5.27864)^2 + ((5.27864)^2 + 5)^2 \\
+                &= 1107.9095
+      \end{aligned}
+    \]
+    <p>\(f_{x_1} &lt; f_{x_2}\):</p>
+    \[
+      \begin{aligned}
+        b &= x_2 = 5.27864 \qquad f_{x_2} = f_{x_1} = 117.3571 \\
+        x_2 &= x_1 = 2.36068 \\
+        x_1 &= -2.36068 + 0.381966(5.27864 - (-2.36068)) \\
+        x_1 &= 0.55728
+      \end{aligned}
+    \]
+
+    <hr>
+
+    <h2>Part 2</h2>
+
+    <p>Fit a line and a parabola through the following points through MSE:</p>
+
+    <table>
+      <tbody>
+        <tr><th>\(x\)</th><td>0</td><td>2</td><td>1</td><td>3</td></tr>
+        <tr><th>\(y\)</th><td>0.5</td><td>3.5</td><td>1.5</td><td>7.5</td></tr>
+      </tbody>
+    </table>
+
+    <svg width="300" height="210" viewBox="0 0 300 210" role="img" aria-label="Scatter plot of the four data points">
+      <g stroke="currentColor" fill="none" stroke-width="1.5">
+        <line x1="30" y1="180" x2="290" y2="180" />
+        <line x1="30" y1="180" x2="30" y2="10" />
+        <line x1="90" y1="176" x2="90" y2="184" />
+        <line x1="150" y1="176" x2="150" y2="184" />
+        <line x1="210" y1="176" x2="210" y2="184" />
+        <line x1="270" y1="176" x2="270" y2="184" />
+        <line x1="26" y1="80" x2="34" y2="80" />
+      </g>
+      <g fill="currentColor" font-size="12" text-anchor="middle">
+        <text x="90" y="198">1</text>
+        <text x="150" y="198">2</text>
+        <text x="210" y="198">3</text>
+        <text x="270" y="198">4</text>
+        <text x="16" y="84">5</text>
+        <circle cx="30" cy="170" r="3.5" />
+        <circle cx="90" cy="150" r="3.5" />
+        <circle cx="150" cy="110" r="3.5" />
+        <circle cx="210" cy="30" r="3.5" />
+      </g>
+    </svg>
+
+    <h3>Least-Square Method</h3>
+
+    <h4>Line Fitting</h4>
+    \[
+      y^*(x) = c_0 + c_1 x
+    \]
+    <p>Ideally, \(y^*(x) = y(x)\):</p>
+    \[
+      \begin{aligned}
+        c_0 + (0)c_1 &= 0.5 \\
+        c_0 + (2)c_1 &= 3.5 \\
+        c_0 + (1)c_1 &= 1.5 \\
+        c_0 + (3)c_1 &= 7.5
+      \end{aligned}
+    \]
+    \[
+      \text{Error } e(x) = y^*(x) - y(x) = c_0 + c_1 x - y(x)
+    \]
+    <p>Find \(c_0, c_1\) to minimize \(\rho(c_0, c_1) = \lVert e(x) \rVert_2^2\) (sum of square errors)</p>
+    \[
+      \rho = (c_0 - 0.5)^2 + (c_0 + 2c_1 - 3.5)^2 + (c_0 + c_1 - 1.5)^2 + (c_0 + 3c_1 - 7.5)^2
+    \]
+    \[
+      \Rightarrow \text{Minimum when } \frac{\partial \rho}{\partial c_0} = \frac{\partial \rho}{\partial c_1} = 0
+    \]
+    \[
+      \begin{aligned}
+        \frac{\partial \rho}{\partial c_0} &= 2(c_0 - 0.5) + 2(c_0 + 2c_1 - 3.5) + 2(c_0 + c_1 - 1.5) + 2(c_0 + 3c_1 - 7.5) \\
+        0 &= 4c_0 + 6c_1 - 13 \qquad \text{I} \\[1ex]
+        \frac{\partial \rho}{\partial c_1} &= 4(c_0 + 2c_1 - 3.5) + 2(c_0 + c_1 - 1.5) + 6(c_0 + 3c_1 - 7.5) \\
+        0 &= 6c_0 + 14c_1 - 31 \qquad \text{II}
+      \end{aligned}
+    \]
+    \[
+      \text{I:} \quad c_0 = -1.5c_1 + 3.25
+    \]
+    <p>Sub into II:</p>
+    \[
+      \begin{aligned}
+        0 &= -9c_1 + 19.5 + 14c_1 - 31 \\
+        c_1 &= 2.3
+      \end{aligned}
+    \]
+    <p>Sub \(c_1\) into I:</p>
+    \[
+      \begin{aligned}
+        c_0 &= -1.5(2.3) + 3.25 \\
+            &= -0.2
+      \end{aligned}
+    \]
+    \[
+      \therefore\ y^*(x) = 2.3x - 0.2
+    \]
+
+    <h4>Parabola Fitting</h4>
+    \[
+      y^*(x) = c_0 + c_1 x + c_2 x^2
+    \]
+    <p>Set \(y^*(x) = y(x)\):</p>
+    \[
+      \begin{aligned}
+        c_0 + (0)c_1 + (0)^2 c_2 &= 0.5 \\
+        c_0 + 2c_1 + 4c_2 &= 3.5 \\
+        c_0 + c_1 + c_2 &= 1.5 \\
+        c_0 + 3c_1 + 9c_2 &= 7.5
+      \end{aligned}
+    \]
+    \[
+      \text{Error } e(x) = y^*(x) - y(x) = c_0 + c_1 x + c_2 x^2 - y(x)
+    \]
+    <p>Find \(c_0, c_1, c_2\) to minimize \(\rho(c_0, c_1, c_2) = \lVert e(x) \rVert_2^2\) (sum of squared errors)</p>
+    \[
+      \rho = (c_0 - 0.5)^2 + (c_0 + 2c_1 + 4c_2 - 3.5)^2 + (c_0 + c_1 + c_2 - 1.5)^2 + (c_0 + 3c_1 + 9c_2 - 7.5)^2
+    \]
+    \[
+      \Rightarrow \text{Minimum when } \frac{\partial \rho}{\partial c_0} = \frac{\partial \rho}{\partial c_1} = \frac{\partial \rho}{\partial c_2} = 0
+    \]
+    \[
+      \begin{aligned}
+        \frac{\partial \rho}{\partial c_0} &= 2(c_0 - 0.5) + 2(c_0 + 2c_1 + 4c_2 - 3.5) + 2(c_0 + c_1 + c_2 - 1.5) + 2(c_0 + 3c_1 + 9c_2 - 7.5) \\
+        0 &= 4c_0 + 6c_1 + 14c_2 - 13 \qquad \text{I} \\[1ex]
+        \frac{\partial \rho}{\partial c_1} &= 4(c_0 + 2c_1 + 4c_2 - 3.5) + 2(c_0 + c_1 + c_2 - 1.5) + 6(c_0 + 3c_1 + 9c_2 - 7.5) \\
+        0 &= 6c_0 + 14c_1 + 36c_2 - 31 \qquad \text{II} \\[1ex]
+        \frac{\partial \rho}{\partial c_2} &= 8(c_0 + 2c_1 + 4c_2 - 3.5) + 2(c_0 + c_1 + c_2 - 1.5) + 18(c_0 + 3c_1 + 9c_2 - 7.5) \\
+        0 &= 14c_0 + 36c_1 + 98c_2 - 83 \qquad \text{III}
+      \end{aligned}
+    \]
+    <p>Solve 3 equation system with calculator:</p>
+    \[
+      c_0 = 0.55, \quad c_1 = 0.05, \quad c_2 = 0.75
+    \]
+    \[
+      \therefore\ y^*(x) = 0.75x^2 + 0.05x + 0.55
+    \]
+
+    <hr>
+
+    <h3>Newton-Raphson Multivariate</h3>
+
+    <h4>Line</h4>
+    \[
+      \begin{aligned}
+        f_0(c_0, c_1) &= c_0 - 0.5 \\
+        f_1(c_0, c_1) &= c_0 + c_1 - 1.5 \\
+        f_2(c_0, c_1) &= c_0 + 2c_1 - 3.5 \\
+        f_3(c_0, c_1) &= c_0 + 3c_1 - 7.5
+      \end{aligned}
+    \]
+    \[
+      J =
+      \begin{bmatrix}
+        \frac{df_0}{dc_0} & \frac{df_0}{dc_1} \\
+        \frac{df_1}{dc_0} & \frac{df_1}{dc_1} \\
+        \frac{df_2}{dc_0} & \frac{df_2}{dc_1} \\
+        \frac{df_3}{dc_0} & \frac{df_3}{dc_1}
+      \end{bmatrix}
+      =
+      \begin{bmatrix}
+        1 & 0 \\
+        1 & 1 \\
+        1 & 2 \\
+        1 & 3
+      \end{bmatrix}
+    \]
+
+    <p>Pseudo-inverse of \(J\):</p>
+    \[
+      J^{-1} = (J^T J)^{-1} J^T
+    \]
+    \[
+      J^T J =
+      \begin{bmatrix} 1 & 1 & 1 & 1 \\ 0 & 1 & 2 & 3 \end{bmatrix}
+      \begin{bmatrix} 1 & 0 \\ 1 & 1 \\ 1 & 2 \\ 1 & 3 \end{bmatrix}
+      =
+      \begin{bmatrix} 4 & 6 \\ 6 & 14 \end{bmatrix}
+    \]
+    \[
+      (J^T J)^{-1} = \frac{1}{(4)(14) - (6)(6)}
+      \begin{bmatrix} 14 & -6 \\ -6 & 4 \end{bmatrix}
+      =
+      \begin{bmatrix} 0.7 & -0.3 \\ -0.3 & 0.2 \end{bmatrix}
+    \]
+    \[
+      (J^T J)^{-1} J^T =
+      \begin{bmatrix} 0.7 & -0.3 \\ -0.3 & 0.2 \end{bmatrix}
+      \begin{bmatrix} 1 & 1 & 1 & 1 \\ 0 & 1 & 2 & 3 \end{bmatrix}
+      =
+      \begin{bmatrix} 0.7 & 0.4 & 0.1 & -0.2 \\ -0.3 & -0.1 & 0.1 & 0.3 \end{bmatrix}
+    \]
+
+    <p>Now,</p>
+    \[
+      \begin{bmatrix} c_0 \\ c_1 \end{bmatrix}_{n+1}
+      =
+      \begin{bmatrix} c_0 \\ c_1 \end{bmatrix}_n - J^{-1} f(c_0, c_1)
+    \]
+
+    <p>First guess: \(c_0 = 0,\ c_1 = 0\)</p>
+    \[
+      \begin{aligned}
+        \begin{bmatrix} c_0 \\ c_1 \end{bmatrix}_1
+        &=
+        \begin{bmatrix} 0 \\ 0 \end{bmatrix}
+        -
+        \begin{bmatrix} 0.7 & 0.4 & 0.1 & -0.2 \\ -0.3 & -0.1 & 0.1 & 0.3 \end{bmatrix}
+        \begin{bmatrix} -0.5 \\ -1.5 \\ -3.5 \\ -7.5 \end{bmatrix} \\
+        &=
+        \begin{bmatrix} 0 \\ 0 \end{bmatrix}
+        -
+        \begin{bmatrix} 0.2 \\ -2.3 \end{bmatrix} \\
+        \begin{bmatrix} c_0 \\ c_1 \end{bmatrix}_1
+        &=
+        \begin{bmatrix} -0.2 \\ 2.3 \end{bmatrix}
+      \end{aligned}
+    \]
+    \[
+      \begin{aligned}
+        \begin{bmatrix} c_0 \\ c_1 \end{bmatrix}_2
+        &=
+        \begin{bmatrix} -0.2 \\ 2.3 \end{bmatrix}
+        -
+        \begin{bmatrix} 0.7 & 0.4 & 0.1 & -0.2 \\ -0.3 & -0.1 & 0.1 & 0.3 \end{bmatrix}
+        \begin{bmatrix} -0.7 \\ 0.6 \\ 0.9 \\ -0.8 \end{bmatrix} \\
+        \begin{bmatrix} c_0 \\ c_1 \end{bmatrix}_2
+        &=
+        \begin{bmatrix} -0.2 \\ 2.3 \end{bmatrix}
+        -
+        \begin{bmatrix} 0 \\ 0 \end{bmatrix} \\
+        \begin{bmatrix} c_0 \\ c_1 \end{bmatrix}_2
+        &=
+        \begin{bmatrix} -0.2 \\ 2.3 \end{bmatrix} \quad \text{Converged}
+      \end{aligned}
+    \]
+    \[
+      \therefore\ y^*(x) = 2.3x - 0.2
+    \]
+
+    <h4>Parabola</h4>
+    \[
+      \begin{aligned}
+        f_0(c_0, c_1, c_2) &= c_0 - 0.5 \\
+        f_1(c_0, c_1, c_2) &= c_0 + c_1 + c_2 - 1.5 \\
+        f_2(c_0, c_1, c_2) &= c_0 + 2c_1 + 4c_2 - 3.5 \\
+        f_3(c_0, c_1, c_2) &= c_0 + 3c_1 + 9c_2 - 7.5
+      \end{aligned}
+    \]
+    \[
+      J =
+      \begin{bmatrix}
+        \frac{df_0}{dc_0} & \frac{df_0}{dc_1} & \frac{df_0}{dc_2} \\
+        \frac{df_1}{dc_0} & \frac{df_1}{dc_1} & \frac{df_1}{dc_2} \\
+        \frac{df_2}{dc_0} & \frac{df_2}{dc_1} & \frac{df_2}{dc_2} \\
+        \frac{df_3}{dc_0} & \frac{df_3}{dc_1} & \frac{df_3}{dc_2}
+      \end{bmatrix}
+      =
+      \begin{bmatrix}
+        1 & 0 & 0 \\
+        1 & 1 & 1 \\
+        1 & 2 & 4 \\
+        1 & 3 & 9
+      \end{bmatrix}
+    \]
+
+    <p>Pseudo-inverse:</p>
+    \[
+      J^T J =
+      \begin{bmatrix} 1 & 1 & 1 & 1 \\ 0 & 1 & 2 & 3 \\ 0 & 1 & 4 & 9 \end{bmatrix}
+      \begin{bmatrix} 1 & 0 & 0 \\ 1 & 1 & 1 \\ 1 & 2 & 4 \\ 1 & 3 & 9 \end{bmatrix}
+      =
+      \begin{bmatrix} 4 & 6 & 14 \\ 6 & 14 & 36 \\ 14 & 36 & 98 \end{bmatrix}
+    \]
+    \[
+      \begin{aligned}
+        (J^T J)^{-1} &=
+        \left[\begin{array}{ccc|ccc}
+          4 & 6 & 14 & 1 & 0 & 0 \\
+          6 & 14 & 36 & 0 & 1 & 0 \\
+          14 & 36 & 98 & 0 & 0 & 1
+        \end{array}\right] \\
+        &=
+        \left[\begin{array}{ccc|ccc}
+          1 & 1.5 & 3.5 & 0.25 & 0 & 0 \\
+          0 & 5 & 15 & -1.5 & 1 & 0 \\
+          0 & 15 & 49 & -3.5 & 0 & 1
+        \end{array}\right] \\
+        &=
+        \left[\begin{array}{ccc|ccc}
+          1 & 1.5 & 3.5 & 0.25 & 0 & 0 \\
+          0 & 1 & 3 & -0.3 & 0.2 & 0 \\
+          0 & 15 & 49 & -3.5 & 0 & 1
+        \end{array}\right] \\
+        &=
+        \left[\begin{array}{ccc|ccc}
+          1 & 0 & -1 & 0.7 & -0.3 & 0 \\
+          0 & 1 & 3 & -0.3 & 0.2 & 0 \\
+          0 & 0 & 4 & 1 & -3 & 1
+        \end{array}\right] \\
+        &=
+        \left[\begin{array}{ccc|ccc}
+          1 & 0 & -1 & 0.7 & -0.3 & 0 \\
+          0 & 1 & 3 & -0.3 & 0.2 & 0 \\
+          0 & 0 & 1 & 0.25 & -0.75 & 0.25
+        \end{array}\right] \\
+        &=
+        \left[\begin{array}{ccc|ccc}
+          1 & 0 & 0 & 0.95 & -1.05 & 0.25 \\
+          0 & 1 & 0 & -1.05 & 2.45 & -0.75 \\
+          0 & 0 & 1 & 0.25 & -0.75 & 0.25
+        \end{array}\right]
+      \end{aligned}
+    \]
+    \[
+      (J^T J)^{-1} J^T =
+      \begin{bmatrix} 0.95 & -1.05 & 0.25 \\ -1.05 & 2.45 & -0.75 \\ 0.25 & -0.75 & 0.25 \end{bmatrix}
+      \begin{bmatrix} 1 & 1 & 1 & 1 \\ 0 & 1 & 2 & 3 \\ 0 & 1 & 4 & 9 \end{bmatrix}
+      =
+      \begin{bmatrix} 0.95 & 0.15 & -0.15 & 0.05 \\ -1.05 & 0.65 & 0.85 & -0.45 \\ 0.25 & -0.25 & -0.25 & 0.25 \end{bmatrix}
+    \]
+
+    <p>Now,</p>
+    \[
+      \begin{bmatrix} c_0 \\ c_1 \\ c_2 \end{bmatrix}_{n+1}
+      =
+      \begin{bmatrix} c_0 \\ c_1 \\ c_2 \end{bmatrix}_n - J^{-1} f(c_n)
+    \]
+
+    <p>Initial guess: \(c_0 = 0,\ c_1 = 0,\ c_2 = 0\)</p>
+    \[
+      \begin{aligned}
+        \begin{bmatrix} c_0 \\ c_1 \\ c_2 \end{bmatrix}_1
+        &=
+        \begin{bmatrix} 0 \\ 0 \\ 0 \end{bmatrix}
+        -
+        \begin{bmatrix} 0.95 & 0.15 & -0.15 & 0.05 \\ -1.05 & 0.65 & 0.85 & -0.45 \\ 0.25 & -0.25 & -0.25 & 0.25 \end{bmatrix}
+        \begin{bmatrix} -0.5 \\ -1.5 \\ -3.5 \\ -7.5 \end{bmatrix} \\
+        \begin{bmatrix} c_0 \\ c_1 \\ c_2 \end{bmatrix}_1
+        &=
+        \begin{bmatrix} 0 \\ 0 \\ 0 \end{bmatrix}
+        -
+        \begin{bmatrix} -0.55 \\ -0.05 \\ -0.75 \end{bmatrix} \\
+        \begin{bmatrix} c_0 \\ c_1 \\ c_2 \end{bmatrix}_1
+        &=
+        \begin{bmatrix} 0.55 \\ 0.05 \\ 0.75 \end{bmatrix}
+      \end{aligned}
+    \]
+    \[
+      \begin{aligned}
+        \begin{bmatrix} c_0 \\ c_1 \\ c_2 \end{bmatrix}_2
+        &=
+        \begin{bmatrix} 0.55 \\ 0.05 \\ 0.75 \end{bmatrix}
+        -
+        \begin{bmatrix} 0.95 & 0.15 & -0.15 & 0.05 \\ -1.05 & 0.65 & 0.85 & -0.45 \\ 0.25 & -0.25 & -0.25 & 0.25 \end{bmatrix}
+        \begin{bmatrix} 0.05 \\ -0.15 \\ 0.15 \\ -0.05 \end{bmatrix} \\
+        \begin{bmatrix} c_0 \\ c_1 \\ c_2 \end{bmatrix}_2
+        &=
+        \begin{bmatrix} 0.55 \\ 0.05 \\ 0.75 \end{bmatrix}
+        -
+        \begin{bmatrix} 0 \\ 0 \\ 0 \end{bmatrix}
+        =
+        \begin{bmatrix} 0.55 \\ 0.05 \\ 0.75 \end{bmatrix} \quad \text{Converged}
+      \end{aligned}
+    \]
+    \[
+      \therefore\ y^*(x) = 0.75x^2 + 0.05x + 0.55
+    \]
+
+    <hr>
+  </body>
+</html>
