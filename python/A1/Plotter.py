@@ -30,7 +30,7 @@ class Plotter:
             ax.scatter(p0[0], p0[1], color='green', zorder=5,
                        label="Points" if first else None)
             ax.scatter(p1[0], p1[1], color='blue', zorder=5,
-                       label="Closest points on f(x)" if first else None)
+                       label=("Closest points on " + function_name) if first else None)
             ax.plot([p0[0],p1[0]], [p0[1],p1[1]], color='red',
                     label="Shortest distance" if first else None)
 
@@ -83,6 +83,7 @@ class Plotter:
         # Label the starting point and each Newton point with its coordinates
         ax.annotate(f"({x0:.4g}, {y0:.4g})", (x0, y0), xytext=(5, 5), textcoords="offset points")
         for i, (x, y) in enumerate(zip(x_history, y_history)):
+            print((float(x_history[i]),float(y_history[i])))
             ax.annotate(
                 f"c{i} ({x:.4g}, {y:.4g})",
                 (x, y),

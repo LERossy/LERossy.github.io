@@ -7,15 +7,27 @@
     <title>My Portfolio</title>
 
     <link rel="stylesheet" href="./style.css">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
   </head>
 
   <body>
-    <h1>Welcome to My SYDE572 Portfolio!</h1>
+    <header class="page-header">
+      <h1 class="home-title">SYDE 572 Portfolio</h1>
+      <h4 class="center">\(Laila \ Elhossini\)</h4>
+    </header>
 
-    <a href="./1/index.html">Assignment 1</a>
-    <a href="./2/index.html">Assignment 2</a>
-    <a href="./3/index.html">Assignment 3</a>
-    <a href="./4/index.html">Assignment 4</a>
-    <a href="./5/index.html">Assignment 5</a>
+    <nav class="home-nav">
+      <div class="home-nav-row"><a class="home-nav-button" href="./1/index.html">Assignment 1</a></div>
+      <div class="home-nav-row"><a class="home-nav-button" href="./2/index.html">Assignment 2</a></div>
+      <div class="home-nav-row"><a class="home-nav-button" href="./3/index.html">Assignment 3</a></div>
+      <div class="home-nav-row"><a class="home-nav-button" href="./4/index.html">Assignment 4</a></div>
+      <div class="home-nav-row"><a class="home-nav-button" href="./5/index.html">Assignment 5</a></div>
+    </nav>
   </body>
 </html>

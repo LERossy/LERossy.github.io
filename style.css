@@ -18,7 +18,20 @@ body {
   font-weight: 400;
 
   margin: 0;
-  padding: 40px;
+
+  /* Side margins scale with screen width:
+     - phones: 16px minimum
+     - tablets/small laptops: grows with the viewport (12vw - 32px)
+     - larger screens: content column capped at 48rem (768px) and centered,
+       so the margins absorb all extra width on big monitors */
+  padding-block: 40px;
+  padding-inline: max(16px, 12vw - 32px, (100vw - 48rem) / 2);
+}
+
+/* Let wide display equations scroll sideways instead of overflowing on phones */
+mjx-container[display="true"] {
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 /* Headings
@@ -105,10 +118,198 @@ hr.short {
   font-weight: 700;
 }
 
+/* Centered plot images, slightly narrower than the text column */
+.plot {
+  margin: 1.5em auto;
+  width: 90%;
+  text-align: center;
+}
+
+.plot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.plot figcaption {
+  margin-top: 0.5em;
+  font-size: 0.9em;
+}
+
 .center {
   text-align: center;
 }
 
 .annotation {
   color: var(--auxiliary);
+}
+
+/* ========================================
+   Navigation
+   ======================================== */
+
+/* Shared sans-serif stack for nav text (matches headings) */
+.home-nav,
+.site-nav {
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+/* ---- Home page: large centered buttons ---- */
+
+.home-title {
+  text-align: center;
+}
+
+.home-nav {
+  --home-button-width: min(16rem, 60vw);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+/* Each row draws a horizontal line on either side of its button,
+   so the line appears to pass through without overlapping it.
+   The row is narrowed so each line is half the leftover column width. */
+.home-nav-row {
+  display: flex;
+  align-items: center;
+  width: calc((100% + var(--home-button-width)) / 2);
+  margin-inline: auto;
+}
+
+.home-nav-row::before,
+.home-nav-row::after {
+  content: "";
+  flex: 1;
+  border-top: 1px solid var(--auxiliary);
+}
+
+.home-nav-button {
+  position: relative;
+  width: var(--home-button-width);
+  padding: 1.1rem 1.5rem;
+  text-align: center;
+  font-size: 1.5em;
+  font-weight: 600;
+  color: var(--text);
+  border-bottom: none;
+}
+
+.home-nav-button:hover {
+  color: var(--text);
+}
+
+/* Corner brackets: top-right and bottom-left, hidden until hover */
+.home-nav-button::before,
+.home-nav-button::after {
+  content: "";
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.home-nav-button::before {
+  top: 0;
+  right: 0;
+  border-top: 2px solid var(--auxiliary);
+  border-right: 2px solid var(--auxiliary);
+}
+
+.home-nav-button::after {
+  bottom: 0;
+  left: 0;
+  border-bottom: 2px solid var(--auxiliary);
+  border-left: 2px solid var(--auxiliary);
+}
+
+.home-nav-button:hover::before,
+.home-nav-button:hover::after,
+.home-nav-button:focus-visible::before,
+.home-nav-button:focus-visible::after {
+  opacity: 1;
+}
+
+/* ---- Page header: square-pattern backdrop behind nav + title ---- */
+
+/* The SVG is drawn at its natural size and centered, so narrower
+   columns crop it rather than scale it and the squares stay square */
+.page-header {
+  background: url("res/header.svg") center top / auto no-repeat;
+  padding-block: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Text inside the header gets a solid backing so the lines stop at its
+   edges instead of running through it (like the home-page buttons) */
+.page-header h1,
+.page-header h4,
+.page-header .site-nav a {
+  background-color: var(--background);
+}
+
+.page-header h1,
+.page-header h4 {
+  width: fit-content;
+  margin: 0 -0.3em;
+  padding: 0.1em 0.3em;
+}
+
+/* Centered header text (home page title and subtitle) */
+.page-header .home-title,
+.page-header .center {
+  margin-inline: auto;
+}
+
+.page-header h1 + h4 {
+  margin-top: 0.75rem;
+}
+
+/* ---- Assignment pages: header bar ---- */
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  margin: 0 -0.4em 2.5rem;
+}
+
+.site-nav a {
+  color: var(--text);
+  border-bottom: none;
+  padding: 0.2em 0.4em;
+  text-decoration: underline 2px transparent;
+  text-underline-offset: 4px;
+  transition: text-decoration-color 0.2s ease;
+}
+
+.site-nav a:hover,
+.site-nav a:focus-visible {
+  color: var(--text);
+  text-decoration-color: var(--auxiliary);
+}
+
+.site-nav .site-nav-home {
+  display: flex;
+  padding: 0.4rem 1rem;
+}
+
+/* Home icon: the PNG is used as a mask, so its shape is filled
+   with a theme colour instead of its original black */
+.home-icon {
+  display: block;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: var(--text);
+  -webkit-mask: url("res/Time_Traveler.png") center / contain no-repeat;
+  mask: url("res/Time_Traveler.png") center / contain no-repeat;
+  transition: background-color 0.2s ease;
+}
+
+.site-nav-home:hover .home-icon,
+.site-nav-home:focus-visible .home-icon {
+  background-color: var(--auxiliary);
 }

@@ -7,7 +7,7 @@ import Plotter
 # Algorithm
 # ---------
 
-def find_distance_newton(x0, y0, f, df, ddf, initial_guess=0.0, tolerance=1e-7, max_iter=100, domain=(-np.inf, np.inf), return_history=False):
+def find_distance_newton(x0, y0, f, df, ddf, initial_guess=0.0, tolerance=1e-7, max_iter=100, domain=(-np.inf, np.inf)):
     x = initial_guess
     history = []
     
@@ -16,8 +16,7 @@ def find_distance_newton(x0, y0, f, df, ddf, initial_guess=0.0, tolerance=1e-7, 
         return None, None, history
     
     for i in range(max_iter):
-        if return_history:
-            history.append(x)
+        history.append(x)
             
         D_prime = 2 * (x - x0) + 2 * (f(x) - y0) * df(x)
         D_double_prime = 2 + 2 * (df(x)**2) + 2 * (f(x) - y0) * ddf(x)
@@ -39,13 +38,9 @@ def find_distance_newton(x0, y0, f, df, ddf, initial_guess=0.0, tolerance=1e-7, 
         
     shortest_distance = ((x - x0)**2 + (f(x) - y0)**2)**0.5
     
-    if return_history:
-        history.append(x)
+    history.append(x)
     
-    if return_history:
-        return shortest_distance, x, history
-    else:
-        return shortest_distance, x
+    return shortest_distance, x, history
 
 # ----------------------------
 # Example Points and Functions
@@ -103,8 +98,8 @@ plotter = Plotter.Plotter()
 
 # f(x)
 for i in range(len(points)):
-    d, solutions[i] = find_distance_newton(points[i][0], points[i][1], f, df, ddf)
-    print ((float(d), float(solutions[i])))
+    d, solutions[i], hist = find_distance_newton(points[i][0], points[i][1], f, df, ddf)
+    print (points[i], float(solutions[i]), float(d), len(hist))
     
 plot_title = "Shortest Line Segments Between Points and f(x) = x^2 + 5"
     
@@ -115,8 +110,8 @@ print()
 # g(x)
 init_guesses = [5, 0, 0, 5, 5, 5, 0, 5, 4, 0]
 for i in range(len(points)):
-    d, solutions[i] = find_distance_newton(points[i][0], points[i][1], g, dg, ddg, initial_guess=init_guesses[i])
-    print ((float(d), float(solutions[i])))
+    d, solutions[i], hist = find_distance_newton(points[i][0], points[i][1], g, dg, ddg, initial_guess=init_guesses[i])
+    print (points[i], float(solutions[i]), float(d), len(hist))
     
 plot_title = "Shortest Line Segments Between Points and g(x) = 3x^3 - 13x^2 + x - 6"
     
@@ -126,8 +121,8 @@ print()
 
 # e(x)
 for i in range(len(points)):
-    d, solutions[i] = find_distance_newton(points[i][0], points[i][1], e, de, dde, initial_guess=points[i][0])
-    print ((float(d), float(solutions[i])))
+    d, solutions[i], hist = find_distance_newton(points[i][0], points[i][1], e, de, dde, initial_guess=points[i][0])
+    print (points[i], float(solutions[i]), float(d), len(hist))
     
 plot_title = "Shortest Line Segments Between Points and e(x) = -1.5e^(2x) + 0.5"
 
@@ -138,17 +133,18 @@ print()
 # c(x)
 init_guesses = [0, -4, -7.5, 2, 6, 2, -5, 0, 0, -2.5]
 for i in range(len(points)):
+    hist = []
     
     # Special case: point (0, 5.4)
     if points[i] == (0, 5.4):
-        d, solutions[i], x_history = find_distance_newton(points[i][0], points[i][1], c, dc, ddc, initial_guess=init_guesses[i], return_history=True)
+        d, solutions[i], hist = find_distance_newton(points[i][0], points[i][1], c, dc, ddc, initial_guess=init_guesses[i])
 
         # Close-up of Newton's iterations
         plot_title = "Iterations of Finding Shortest Distance Between (0, 5.4) and c(x) = 2cos(x - 1) + 1"
-        plotter.plot_newton_steps( x, c, points[i][0], points[i][1], x_history, title=plot_title, function_name="c(x)")
+        plotter.plot_newton_steps( x, c, points[i][0], points[i][1], hist, title=plot_title, function_name="c(x)")
     else:
-        d, solutions[i] = find_distance_newton(points[i][0],points[i][1],c, dc, ddc, initial_guess=init_guesses[i])
-    print ((float(d), float(solutions[i])))
+        d, solutions[i], hist = find_distance_newton(points[i][0],points[i][1],c, dc, ddc, initial_guess=init_guesses[i])
+    print (points[i], float(solutions[i]), float(d), len(hist))
 
 plot_title = "Shortest Line Segments Between Points and c(x) = 2cos(x - 1) + 1"
 
@@ -159,8 +155,8 @@ print()
 # l(x)
 init_guesses = [1, 0.1, 0.1, 1, 1, 1, 1, 1, 0.1, 0.00001]
 for i in range(len(points)):
-    d, solutions[i] = find_distance_newton(points[i][0], points[i][1], l, dl, ddl, initial_guess=init_guesses[i], domain=(0, np.inf))
-    print ((float(d), float(solutions[i])))
+    d, solutions[i], hist = find_distance_newton(points[i][0], points[i][1], l, dl, ddl, initial_guess=init_guesses[i], domain=(0, np.inf))
+    print (points[i], float(solutions[i]), float(d), len(hist))
     
 plot_title = "Shortest Line Segments Between Points and l(x) = 0.5ln(x)"
 
