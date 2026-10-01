@@ -32,6 +32,9 @@ body {
 mjx-container[display="true"] {
   overflow-x: auto;
   overflow-y: hidden;
+  /* Room for glyphs that extend past MathJax's measured box,
+     so their tops/bottoms aren't clipped by the overflow rule above */
+  padding-block: 0.25em;
 }
 
 /* Headings
@@ -136,8 +139,21 @@ hr.short {
   font-size: 0.9em;
 }
 
+/* Centered inline SVG graph, with extra space above (e.g. below a table) */
+.svg-plot {
+  display: block;
+  margin: 2.5em auto 1.5em;
+  max-width: 100%;
+  height: auto;
+}
+
 .center {
   text-align: center;
+}
+
+/* Tab-style indent for sub-step labels like i), ii) */
+.indent {
+  margin-left: 2em;
 }
 
 .annotation {

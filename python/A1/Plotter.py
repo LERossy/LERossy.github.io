@@ -90,3 +90,64 @@ class Plotter:
                 xytext=(5, 5),
                 textcoords="offset points"
             )
+
+    def plot_bisection_steps(self, x_series, f, x0, y0, a_b_history, title=None, function_name="f(x)"):
+        fig, ax = plt.subplots()
+
+        # Function
+        ax.plot(x_series, f(x_series), label=function_name)
+
+        # Original point
+        ax.scatter(x0, y0, color='green', s=60, zorder=5, label="Starting point")
+
+        # Collect only the bound that changed on each step.
+        # Step 0 has no previous bounds, so both a_0 and b_0 are plotted.
+        a_points = []  # (i, x) for each step where a changed
+        b_points = []  # (i, x) for each step where b changed
+        for i, (a, b) in enumerate(a_b_history):
+            if i == 0 or a != a_b_history[i-1][0]:
+                a_points.append((i, a))
+            if i == 0 or b != a_b_history[i-1][1]:
+                b_points.append((i, b))
+
+        a_xs = [x for _, x in a_points]
+        b_xs = [x for _, x in b_points]
+        ax.scatter(a_xs, [f(x) for x in a_xs], color='orange', s=40, zorder=5, label="a (lower bound) updates")
+        ax.scatter(b_xs, [f(x) for x in b_xs], color='purple', s=40, zorder=5, label="b (upper bound) updates")
+
+        # Axes
+        ax.axhline(0, linewidth=1, color='black')
+        ax.axvline(0, linewidth=1, color='black')
+
+        # Automatically make the close-up around the plotted bounds
+        x_min = min(a_xs + b_xs + [x0])
+        x_max = max(a_xs + b_xs + [x0])
+
+        padding = 0.5 * (x_max - x_min)
+
+        if padding == 0:
+            padding = 1
+
+        ax.set_xlim(x_min - padding, x_max + padding)
+
+        ax.set_xlabel("x")
+        ax.set_ylabel("y")
+        if title:
+            ax.set_title(title)
+
+        ax.grid()
+        ax.legend()
+
+        # Label the starting point and each changed bound with its coordinates
+        ax.annotate(f"({x0:.4g}, {y0:.4g})", (x0, y0), xytext=(5, 5), textcoords="offset points")
+        for name, pts in (("a", a_points), ("b", b_points)):
+            for i, x in pts:
+                y = f(x)
+                ax.annotate(
+                    f"{name}{i} ({x:.4g}, {y:.4g})",
+                    (x, y),
+                    xytext=(5, 5),
+                    textcoords="offset points"
+                )
+                
+    

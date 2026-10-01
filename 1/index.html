@@ -171,6 +171,10 @@
       \end{aligned}
     \]
 
+    <p>For each iteration, to find the next guess, the first derivative divided by the second derivative of \(D(x)\) is subtracted from the previous guess.
+        This is to find the root of \(D'(x)\), which is where the minimum of \(D(x)\) occurs.
+    </p>
+
     <p>
       For the analytical approach, the distances were determined to 4 decimal places, so the
       algorithm will be applied to that accuracy by hand. Finer accuracy can be achieved with a computer.
@@ -303,7 +307,7 @@
         d(6,0) &= 7.6031
       \end{aligned}
     \]
-
+    
     <hr class="short">
 
     <h4>Newton-Raphson in Code</h4>
@@ -445,7 +449,7 @@
       <img src="res/c_x_newton_shortest_distance.png" alt="Plot of the test points and their shortest distance to c(x) using Newton-Raphson">
     </figure>
 
-    <p>Further, here is another point showing the iteration steps for point (0, 5.4) to c(x). 
+    <p>Further, here is another plot showing the iteration steps for point (0, 5.4) to c(x). 
         Because some of the later iterations are very close, the coordinates aren't entirely visible, 
         so they're listed in the table below.</p>
 
@@ -500,8 +504,10 @@
     <hr>
 
     <h4>Algorithm B: Golden Section Search</h4>
+    <p>This algorithm works by repeatedly narrowing down a section [a,b], where the solution is known to be,
+        by a factor of phi until the section is within a specified tolerance around the solution x.</p>
     \[
-      \text{Section } [a, b] = [-10, 10] \qquad D(x) = (x - x_0)^2 + (x^2 + 5 - y_0)^2
+      \qquad D(x) = (x - x_0)^2 + (x^2 + 5 - y_0)^2
     \]
     \[
       \begin{aligned}
@@ -511,17 +517,26 @@
     \]
     \[
       \begin{aligned}
-        x_1 &= a + \varphi_{res}(b - a) & x_2 &= b - \varphi_{res}(b - a) \\
-            &= -10 + 0.381966(10 - (-10)) & &= 10 - 0.381966(10 - (-10)) \\
-        x_1 &= -2.36068 & &= 2.36068
+        x_1 &= a + \varphi_{res}(b - a) & x_2 &= b - \varphi_{res}(b - a)
       \end{aligned}
     \]
 
     <p>For points \([(0,0);\ (-4,0);\ (-8,0);\ (2,0);\ (6,0)]\)</p>
 
     <h5>1. \((0, 0) \rightarrow D(x) = x^2 + (x^2 + 5)^2\)</h5>
+    \[
+        \text{Section } [a, b] = [-10, 10] 
+    \]
+    
+    \[
+      \begin{aligned}
+        x_1 &= a + \varphi_{res}(b - a) & x_2 &= b - \varphi_{res}(b - a) \\
+            &= -10 + 0.381966(10 - (-10)) & &= 10 - 0.381966(10 - (-10)) \\
+        x_1 &= -2.36068 & &= 2.36068
+      \end{aligned}
+    \]
 
-    <p>i)</p>
+    <p class="indent">i)</p>
     \[
       \begin{aligned}
         f_{x_1} &= D(x_1) = (-2.36068)^2 + ((-2.36068)^2 + 5)^2 \\
@@ -530,7 +545,7 @@
         D(x_2) &= 117.3571
       \end{aligned}
     \]
-    <p>\(f_{x_1} = f_{x_2}\):</p>
+    <p class="center">\(f_{x_1} = f_{x_2}\):</p>
     \[
       \begin{aligned}
         a &= x_1 = -2.36068 \qquad f_{x_1} = f_{x_2} = 117.3571 \\
@@ -540,14 +555,14 @@
       \end{aligned}
     \]
 
-    <p>ii)</p>
+    <p class="indent">ii)</p>
     \[
       \begin{aligned}
         f_{x_2} &= D(x_2) = (5.27864)^2 + ((5.27864)^2 + 5)^2 \\
                 &= 1107.9095
       \end{aligned}
     \]
-    <p>\(f_{x_1} &lt; f_{x_2}\):</p>
+    <p class="center">\(f_{x_1} &lt; f_{x_2}\):</p>
     \[
       \begin{aligned}
         b &= x_2 = 5.27864 \qquad f_{x_2} = f_{x_1} = 117.3571 \\
@@ -557,20 +572,430 @@
       \end{aligned}
     \]
 
+    <h5>2. \((-4, 0) \rightarrow D(x) = (x + 4)^2 + (x^2 + 5)^2\)</h5>
+
+    \[
+      [a, b] = [-0.5, 0.5]
+    \]
+    \[
+      \begin{aligned}
+        x_1 &= -0.11803 & x_2 &= 0.11803
+      \end{aligned}
+    \]
+
+    <p class="indent">i)</p>
+    \[
+      \begin{aligned}
+        f_{x_1} &= D(x_1) = (-0.11803 + 4)^2 + ((-0.11803)^2 + 5)^2 \\
+                &= 40.2092 \\
+        f_{x_2} &= D(x_2) = (0.11803 + 4)^2 + ((0.11803)^2 + 5)^2 \\
+                &= 42.6977
+      \end{aligned}
+    \]
+    <p class="center">\(f_{x_1} &lt; f_{x_2}\):</p>
+    \[
+      \begin{aligned}
+        b &= x_2 = 0.11803 \qquad f_{x_2} = f_{x_1} = 40.2092 \\
+        x_2 &= x_1 = -0.11803 \\
+        x_1 &= -0.5 + 0.381966(0.11803 - (-0.5)) \\
+        x_1 &= -0.26393
+      \end{aligned}
+    \]
+
+    <p class="indent">ii)</p>
+    \[
+      \begin{aligned}
+        f_{x_1} &= D(x_1) = (-0.26393 + 4)^2 + ((-0.26393)^2 + 5)^2 \\
+                &= 39.6597
+      \end{aligned}
+    \]
+    <p class="center">\(f_{x_1} &lt; f_{x_2}\):</p>
+    \[
+      \begin{aligned}
+        b &= x_2 = -0.11803 \qquad f_{x_2} = f_{x_1} = 39.6597 \\
+        x_2 &= x_1 = -0.26393 \\
+        x_1 &= -0.5 + 0.381966(-0.11803 + 0.5) \\
+        x_1 &= -0.35410
+      \end{aligned}
+    \]
+
+    <h5>3. \((-8, 0) \rightarrow D(x) = (x + 8)^2 + (x^2 + 5)^2\)</h5>
+
+    \[
+      [a, b] = [-0.7, 0]
+    \]
+    \[
+      \begin{aligned}
+        x_1 &= -0.7 + 0.381966(0 - (-0.7)) & x_2 &= 0 - 0.381966(0 + 0.7) \\
+        x_1 &= -0.43262 & x_2 &= -0.26738
+      \end{aligned}
+    \]
+
+    <p class="indent">i)</p>
+    \[
+      \begin{aligned}
+        f_{x_1} &= D(x_1) = (-0.43262 + 8)^2 + ((-0.43262)^2 + 5)^2 \\
+                &= 84.1718 \\
+        f_{x_2} &= D(x_2) = (-0.26738 + 8)^2 + ((-0.26738)^2 + 5)^2 \\
+                &= 85.5135
+      \end{aligned}
+    \]
+    <p class="center">\(f_{x_1} &lt; f_{x_2}\):</p>
+    \[
+      \begin{aligned}
+        b &= x_2 = -0.26738 \qquad f_{x_2} = f_{x_1} = 84.1718 \\
+        x_2 &= x_1 = -0.43262 \\
+        x_1 &= -0.7 + 0.381966(-0.26738 + 0.7) \\
+        x_1 &= -0.53475
+      \end{aligned}
+    \]
+
+    <p class="indent">ii)</p>
+    \[
+      \begin{aligned}
+        f_{x_1} &= D(x_1) = (-0.53475 + 8)^2 + ((-0.53475)^2 + 5)^2 \\
+                &= 83.6713
+      \end{aligned}
+    \]
+    <p class="center">\(f_{x_1} &lt; f_{x_2}\):</p>
+    \[
+      \begin{aligned}
+        b &= x_2 = -0.43262 \qquad f_{x_2} = f_{x_1} = 83.6713 \\
+        x_2 &= x_1 = -0.53475 \\
+        x_1 &= -0.7 + 0.381966(-0.43262 + 0.7)
+      \end{aligned}
+    \]
+
+    <h5>4. \((2, 0) \rightarrow D(x) = (x - 2)^2 + (x^2 + 5)^2\)</h5>
+
+    \[
+      [a, b] = [0, 0.2]
+    \]
+    \[
+      \begin{aligned}
+        x_1 &= 0 + 0.381966(0.2 - 0) & x_2 &= 0.2 - 0.381966(0.2 - 0) \\
+            &= 0.076393 & &= 0.12361
+      \end{aligned}
+    \]
+
+    <p class="indent">i)</p>
+    \[
+      \begin{aligned}
+        f_{x_1} &= D(x_1) = (0.076393 - 2)^2 + (0.076393^2 + 5)^2 \\
+                &= 28.7587 \\
+        f_{x_2} &= D(x_2) = (0.12361 - 2)^2 + (0.12361^2 + 5)^2 \\
+                &= 28.6739
+      \end{aligned}
+    \]
+    <p class="center">\(f_{x_2} &lt; f_{x_1}\):</p>
+    \[
+      \begin{aligned}
+        a &= x_1 = 0.076393 \qquad f_{x_1} = f_{x_2} = 28.6739 \\
+        x_1 &= x_2 = 0.12361 \\
+        x_2 &= 0.2 - 0.381966(0.2 - 0.076393) \\
+        x_2 &= 0.15279
+      \end{aligned}
+    \]
+
+    <p class="indent">ii)</p>
+    \[
+      \begin{aligned}
+        f_{x_2} &= D(x_2) = (0.15279 - 2)^2 + (0.15279^2 + 5)^2 \\
+                &= 28.6462
+      \end{aligned}
+    \]
+    <p class="center">\(f_{x_2} &lt; f_{x_1}\):</p>
+    \[
+      \begin{aligned}
+        a &= x_1 = 0.12361 \qquad f_{x_1} = f_{x_2} = 28.6462 \\
+        x_1 &= x_2 = 0.15279 \\
+        x_2 &= 0.2 - 0.381966(0.2 - 0.12361) \\
+        x_2 &= 0.17082
+      \end{aligned}
+    \]
+
+    <h5>5. \((6, 0) \rightarrow D(x) = (x - 6)^2 + (x^2 + 5)^2\)</h5>
+
+    \[
+      [a, b] = [0, 0.6]
+    \]
+    \[
+      \begin{aligned}
+        x_1 &= 0 + 0.381966(0.6 - 0) & x_2 &= 0.6 - 0.381966(0.6 - 0) \\
+            &= 0.22918 & &= 0.37082
+      \end{aligned}
+    \]
+
+    <p class="indent">i)</p>
+    \[
+      \begin{aligned}
+        f_{x_1} &= D(x_1) = (0.22918 - 6)^2 + (0.22918^2 + 5)^2 \\
+                &= 58.8304 \\
+        f_{x_2} &= D(x_2) = (0.37082 - 6)^2 + (0.37082^2 + 5)^2 \\
+                &= 58.0816
+      \end{aligned}
+    \]
+    <p class="center">\(f_{x_2} &lt; f_{x_1}\):</p>
+    \[
+      \begin{aligned}
+        a &= x_1 = 0.22918 \qquad f_{x_1} = f_{x_2} = 58.0816 \\
+        x_1 &= x_2 = 0.37082 \\
+        x_2 &= 0.6 - 0.381966(0.6 - 0.22918) \\
+        x_2 &= 0.45836
+      \end{aligned}
+    \]
+
+    <p class="indent">ii)</p>
+    \[
+      \begin{aligned}
+        f_{x_2} &= D(x_2) = (0.45836 - 6)^2 + (0.45836^2 + 5)^2 \\
+                &= 57.8549
+      \end{aligned}
+    \]
+    <p class="center">\(f_{x_2} &lt; f_{x_1}\):</p>
+    \[
+      \begin{aligned}
+        a &= x_1 = 0.37082 \qquad f_{x_1} = f_{x_2} = 57.8549 \\
+        x_1 &= x_2 = 0.45836 \\
+        x_2 &= 0.6 - 0.381966(0.6 - 0.37082) \\
+        x_2 &= 0.51246
+      \end{aligned}
+    \]
+
+    <hr class="short">
+
+    <h4>Golden Section Search in Code</h4>
+
+    <p>The Algorithm above was implemented in Python, and run for the following functions and points (Same as Newton-Raphson):</p>
+
+    \[
+      \begin{aligned}
+        f(x) &= x^2 + 5 \\
+        g(x) &= 3x^3 - 13x^2 + x - 6 \\
+        e(x) &= -1.5e^{2x} + 0.5 \\
+        c(x) &= 2\cos(x - 1) + 1 \\
+        l(x) &= 0.5\ln(x)
+      \end{aligned}
+    \]
+
+    \[
+        \text{Points: [(0,0); (-4,0); (-8,0); (2,0); (6,0); (2,2); (-2.5,6); (0,5.4); (0,-1.3); (-5,-4)]}
+    \]
+
+    <h5>A Couple of Notes:</h5>
+    <p>1. For some of the functions, especially those with deeper wells like the cubic, or periodicity like cosine, 
+        the initial section sometimes needed to closely bound the true value, which was determined through inspection.</p>
+    <p>2. For functions with restricted domain, like ln(x), the given section to search must be fully within the domain of the function.</p>
+
+    <h4>\(f(x) = x^2 + 5\)</h4>
+    <p>The following are the results of the algorithm for the points above:</p>
+
+    <table class="data-table">
+      <caption>\(f(x) = x^2 + 5\)</caption>
+      <thead>
+        <tr><th>point</th><th>initial section</th><th>x</th><th>d</th><th>iterations</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>(0, 0)</td>   <td>[-2, 2]</td><td>0.0000000</td><td>5.0000000</td><td>38</td></tr>
+        <tr><td>(-4, 0)</td>  <td>[-2, 2]</td><td>-0.3554697</td><td>6.2898454</td><td>38</td></tr>
+        <tr><td>(-8, 0)</td>  <td>[-2, 2]</td><td>-0.6720781</td><td>9.1334195</td><td>38</td></tr>
+        <tr><td>(2, 0)</td>   <td>[-2, 2]</td><td>0.1807446</td><td>5.3513964</td><td>38</td></tr>
+        <tr><td>(6, 0)</td>   <td>[-2, 2]</td><td>0.5199037</td><td>7.6031254</td><td>38</td></tr>
+        <tr><td>(2, 2)</td>   <td>[-2, 2]</td><td>0.2794774</td><td>3.5263217</td><td>38</td></tr>
+        <tr><td>(-2.5, 6)</td><td>[-2, 2]</td><td>-1.2310224</td><td>1.3696561</td><td>38</td></tr>
+        <tr><td>(0, 5.4)</td> <td>[-2, 2]</td><td>0.0000000</td><td>0.4000000</td><td>38</td></tr>
+        <tr><td>(0, -1.3)</td><td>[-2, 2]</td><td>0.0000000</td><td>6.3000000</td><td>38</td></tr>
+        <tr><td>(-5, -4)</td> <td>[-2, 2]</td><td>-0.2612803</td><td>10.2317612</td><td>38</td></tr>
+      </tbody>
+    </table>
+
+    <p>Below is a plot of all the points and their shortest distance to f(x):</p>
+
+    <figure class="plot">
+      <img src="res/f_x_bisection_shortest_distance.png" alt="Plot of the test points and their shortest distance to f(x) using Golden Section Search">
+    </figure>
+
+    <h4>\(g(x) = 3x^3 - 13x^2 + x - 6\)</h4>
+    <p>The following are the results of the algorithm for the points above:</p>
+
+    <table class="data-table">
+      <caption>\(g(x) = 3x^3 - 13x^2 + x - 6\)</caption>
+      <thead>
+        <tr><th>point</th><th>initial section</th><th>x</th><th>d</th><th>iterations</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>(0, 0)</td>   <td>[4, 5]</td><td>4.3607665</td><td>4.3613978</td><td>35</td></tr>
+        <tr><td>(-4, 0)</td>  <td>[-0.5, 0.5]</td><td>0.0127494</td><td>7.2093385</td><td>35</td></tr>
+        <tr><td>(-8, 0)</td>  <td>[-0.5, 0.5]</td><td>-0.0125609</td><td>9.9987405</td><td>35</td></tr>
+        <tr><td>(2, 0)</td>   <td>[4, 5]</td><td>4.3613456</td><td>2.3616871</td><td>35</td></tr>
+        <tr><td>(6, 0)</td>   <td>[4, 5]</td><td>4.3625013</td><td>1.6377351</td><td>35</td></tr>
+        <tr><td>(2, 2)</td>   <td>[4, 5]</td><td>4.3948678</td><td>2.3951942</td><td>35</td></tr>
+        <tr><td>(-2.5, 6)</td><td>[-0.5, 0.5]</td><td>0.0306633</td><td>12.2458139</td><td>35</td></tr>
+        <tr><td>(0, 5.4)</td> <td>[4, 5]</td><td>4.4491974</td><td>4.4497495</td><td>35</td></tr>
+        <tr><td>(0, -1.3)</td><td>[4, 5]</td><td>4.3384033</td><td>4.3390571</td><td>35</td></tr>
+        <tr><td>(-5, -4)</td> <td>[-0.5, 0.5]</td><td>-0.0517967</td><td>5.3703506</td><td>35</td></tr>
+      </tbody>
+    </table>
+
+    <p>Below is a plot of all the points and their shortest distance to g(x):</p>
+
+    <figure class="plot">
+      <img src="res/g_x_bisection_shortest_distance.png" alt="Plot of the test points and their shortest distance to g(x) using Golden Section Search">
+    </figure>
+
+    <h4>\(e(x) = -1.5e^{2x} + 0.5\)</h4>
+    <p>The following are the results of the algorithm for the points above:</p>
+
+    <table class="data-table">
+      <caption>\(e(x) = -1.5e^{2x} + 0.5\)</caption>
+      <thead>
+        <tr><th>point</th><th>initial section</th><th>x</th><th>d</th><th>iterations</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>(0, 0)</td>   <td>[-10, 1]</td><td>-0.3537765</td><td>0.4270942</td><td>40</td></tr>
+        <tr><td>(-4, 0)</td>  <td>[-10, 1]</td><td>-3.9994968</td><td>0.4994966</td><td>40</td></tr>
+        <tr><td>(-8, 0)</td>  <td>[-10, 1]</td><td>-7.9999998</td><td>0.4999998</td><td>40</td></tr>
+        <tr><td>(2, 0)</td>   <td>[-10, 1]</td><td>-0.0722603</td><td>2.2206565</td><td>40</td></tr>
+        <tr><td>(6, 0)</td>   <td>[-10, 1]</td><td>0.1388294</td><td>6.0451534</td><td>40</td></tr>
+        <tr><td>(2, 2)</td>   <td>[-10, 1]</td><td>-0.4665013</td><td>3.2329497</td><td>40</td></tr>
+        <tr><td>(-2.5, 6)</td><td>[-10, 1]</td><td>-2.5925338</td><td>5.5091765</td><td>40</td></tr>
+        <tr><td>(0, 5.4)</td> <td>[-10, 1]</td><td>-1.2463238</td><td>5.1763174</td><td>40</td></tr>
+        <tr><td>(0, -1.3)</td><td>[-10, 1]</td><td>0.0845087</td><td>0.0877931</td><td>40</td></tr>
+        <tr><td>(-5, -4)</td> <td>[-10, 1]</td><td>-4.9993863</td><td>4.4999319</td><td>40</td></tr>
+      </tbody>
+    </table>
+    
+    <p>Below is a plot of all the points and their shortest distance to e(x):</p>
+
+    <figure class="plot">
+      <img src="res/e_x_bisection_shortest_distance.png" alt="Plot of the test points and their shortest distance to e(x) using Golden Section Search">
+    </figure>
+    
+    <h4>\(c(x) = 2\cos(x - 1) + 1\)</h4>
+    <p>The following are the results of the algorithm for the points above:</p>
+
+    <table class="data-table">
+      <caption>\(c(x) = 2\cos(x - 1) + 1\)</caption>
+      <thead>
+        <tr><th>point</th><th>initial section</th><th>x</th><th>d</th><th>iterations</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>(0, 0)</td>   <td>[-1, 0]</td><td>-0.8526066</td><td>0.9612000</td><td>35</td></tr>
+        <tr><td>(-4, 0)</td>  <td>[-4.5, -3]</td><td>-3.3723236</td><td>0.7104940</td><td>36</td></tr>
+        <tr><td>(-8, 0)</td>  <td>[-8, -7]</td><td>-7.5556027</td><td>0.5311493</td><td>35</td></tr>
+        <tr><td>(2, 0)</td>   <td>[2, 3]</td><td>2.8526066</td><td>0.9612000</td><td>35</td></tr>
+        <tr><td>(6, 0)</td>   <td>[5, 6.5]</td><td>5.3723236</td><td>0.7104940</td><td>36</td></tr>
+        <tr><td>(2, 2)</td>   <td>[1.5, 2.5]</td><td>2.0353057</td><td>0.0408389</td><td>35</td></tr>
+        <tr><td>(-2.5, 6)</td><td>[-6, -4]</td><td>-4.8934743</td><td>3.9561321</td><td>36</td></tr>
+        <tr><td>(0, 5.4)</td> <td>[0, 1.5]</td><td>0.8286160</td><td>2.5667306</td><td>36</td></tr>
+        <tr><td>(0, -1.3)</td><td>[-1, 0]</td><td>-1.0000000</td><td>1.7759961</td><td>35</td></tr>
+        <tr><td>(-5, -4)</td> <td>[-3, -2]</td><td>-2.5414493</td><td>4.0019945</td><td>35</td></tr>
+      </tbody>
+    </table>
+    
+    <p>Below is a plot of all the points and their shortest distance to c(x):</p>
+
+    <figure class="plot">
+      <img src="res/c_x_bisection_shortest_distance.png" alt="Plot of the test points and their shortest distance to c(x) using Golden Section Search">
+    </figure>
+
+    <p>Further, here is another plot showing the iteration steps for point (0, 5.4) to c(x). 
+        Because some of the later iterations are very close, the coordinates aren't entirely visible, 
+        so they're listed in the table below.</p>
+
+    <figure class="plot">
+      <img src="res/c_x_bisection_iterations.png" alt="Plot of the iteration steps to find the shortest distance between (0,5.4) and c(x) using Golden Section Search">
+    </figure>
+
+    <table class="data-table">
+      <caption>Iteration Steps</caption>
+      <thead>
+        <tr><th>iteration</th><th>section</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>[a0, b0]</td><td>[0.0000000, 1.5000000]</td></tr>
+        <tr><td>[a1, b1]</td><td>[0.5729490, 1.5000000]</td></tr>
+        <tr><td>[a2, b2]</td><td>[0.5729490, 1.1458980]</td></tr>
+        <tr><td>[a3, b3]</td><td>[0.5729490, 0.9270510]</td></tr>
+        <tr><td>[a4, b4]</td><td>[0.7082039, 0.9270510]</td></tr>
+        <tr><td>[a5, b5]</td><td>[0.7917961, 0.9270510]</td></tr>
+        <tr><td>[a6, b6]</td><td>[0.7917961, 0.8753882]</td></tr>
+        <tr><td>[a7, b7]</td><td>[0.7917961, 0.8434588]</td></tr>
+        <tr><td>[a8, b8]</td><td>[0.8115295, 0.8434588]</td></tr>
+        <tr><td>[a9, b9]</td><td>[0.8237254, 0.8434588]</td></tr>
+        <tr><td>[a10, b10]</td><td>[0.8237254, 0.8359214]</td></tr>
+        <tr><td>[a11, b11]</td><td>[0.8237254, 0.8312629]</td></tr>
+        <tr><td>[a12, b12]</td><td>[0.8266045, 0.8312629]</td></tr>
+        <tr><td>[a13, b13]</td><td>[0.8266045, 0.8294836]</td></tr>
+        <tr><td>[a14, b14]</td><td>[0.8277042, 0.8294836]</td></tr>
+        <tr><td>[a15, b15]</td><td>[0.8283839, 0.8294836]</td></tr>
+        <tr><td>[a16, b16]</td><td>[0.8283839, 0.8290635]</td></tr>
+        <tr><td>[a17, b17]</td><td>[0.8283839, 0.8288039]</td></tr>
+        <tr><td>[a18, b18]</td><td>[0.8285443, 0.8288039]</td></tr>
+        <tr><td>[a19, b19]</td><td>[0.8285443, 0.8287047]</td></tr>
+        <tr><td>[a20, b20]</td><td>[0.8285443, 0.8286435]</td></tr>
+        <tr><td>[a21, b21]</td><td>[0.8285822, 0.8286435]</td></tr>
+        <tr><td>[a22, b22]</td><td>[0.8286056, 0.8286435]</td></tr>
+        <tr><td>[a23, b23]</td><td>[0.8286056, 0.8286290]</td></tr>
+        <tr><td>[a24, b24]</td><td>[0.8286056, 0.8286200]</td></tr>
+        <tr><td>[a25, b25]</td><td>[0.8286111, 0.8286200]</td></tr>
+        <tr><td>[a26, b26]</td><td>[0.8286145, 0.8286200]</td></tr>
+        <tr><td>[a27, b27]</td><td>[0.8286145, 0.8286179]</td></tr>
+        <tr><td>[a28, b28]</td><td>[0.8286145, 0.8286166]</td></tr>
+        <tr><td>[a29, b29]</td><td>[0.8286153, 0.8286166]</td></tr>
+        <tr><td>[a30, b30]</td><td>[0.8286158, 0.8286166]</td></tr>
+        <tr><td>[a31, b31]</td><td>[0.8286158, 0.8286163]</td></tr>
+        <tr><td>[a32, b32]</td><td>[0.8286158, 0.8286161]</td></tr>
+        <tr><td>[a33, b33]</td><td>[0.8286159, 0.8286161]</td></tr>
+        <tr><td>[a34, b34]</td><td>[0.8286159, 0.8286161]</td></tr>
+        <tr><td>[a35, b35]</td><td>[0.8286160, 0.8286161]</td></tr>
+      </tbody>
+    </table>
+
+    
+
+    <h4>\(l(x) = 0.5\ln(x)\)</h4>
+    <p>The following are the results of the algorithm for the points above:</p>
+
+    <table class="data-table">
+      <caption>\(l(x) = 0.5\ln(x)\)</caption>
+      <thead>
+        <tr><th>point</th><th>initial section</th><th>x</th><th>d</th><th>iterations</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>(0, 0)</td>   <td>[0, 6.5]</td><td>0.4480251</td><td>0.6015738</td><td>39</td></tr>
+        <tr><td>(-4, 0)</td>  <td>[0, 6.5]</td><td>0.1256782</td><td>4.2540124</td><td>39</td></tr>
+        <tr><td>(-8, 0)</td>  <td>[0, 6.5]</td><td>0.0786766</td><td>8.1780791</td><td>39</td></tr>
+        <tr><td>(2, 0)</td>   <td>[0, 6.5]</td><td>1.9151763</td><td>0.3357949</td><td>39</td></tr>
+        <tr><td>(6, 0)</td>   <td>[0, 6.5]</td><td>5.9249287</td><td>0.8927463</td><td>39</td></tr>
+        <tr><td>(2, 2)</td>   <td>[0, 6.5]</td><td>2.3370769</td><td>1.6112036</td><td>39</td></tr>
+        <tr><td>(-2.5, 6)</td><td>[0, 6.5]</td><td>0.8926371</td><td>6.9422376</td><td>39</td></tr>
+        <tr><td>(0, 5.4)</td> <td>[0, 6.5]</td><td>1.6066910</td><td>5.4071353</td><td>39</td></tr>
+        <tr><td>(0, -1.3)</td><td>[0, 6.5]</td><td>0.0727190</td><td>0.0734841</td><td>39</td></tr>
+        <tr><td>(-5, -4)</td> <td>[0, 6.5]</td><td>0.0003332</td><td>5.0003343</td><td>39</td></tr>
+      </tbody>
+    </table>
+
+    <p>Below is a plot of all the points and their shortest distance to l(x):</p>
+
+    <figure class="plot">
+      <img src="res/l_x_bisection_shortest_distance.png" alt="Plot of the test points and their shortest distance to l(x) using Golden Section Search">
+    </figure>
+
     <hr>
 
     <h2>Part 2</h2>
 
-    <p>Fit a line and a parabola through the following points through MSE:</p>
+    <p>Fit a line and a parabola through the following points by minimizing MSE:</p>
 
-    <table>
+    <table class="data-table">
       <tbody>
-        <tr><th>\(x\)</th><td>0</td><td>2</td><td>1</td><td>3</td></tr>
-        <tr><th>\(y\)</th><td>0.5</td><td>3.5</td><td>1.5</td><td>7.5</td></tr>
+        <tr><th>\(x\)</th><td>0</td><td>1</td><td>2</td><td>3</td></tr>
+        <tr><th>\(y\)</th><td>0.5</td><td>1.5</td><td>3.5</td><td>7.5</td></tr>
       </tbody>
     </table>
 
-    <svg width="300" height="210" viewBox="0 0 300 210" role="img" aria-label="Scatter plot of the four data points">
+    <svg class="svg-plot" width="300" height="210" viewBox="0 0 300 210" role="img" aria-label="Scatter plot of the four data points">
       <g stroke="currentColor" fill="none" stroke-width="1.5">
         <line x1="30" y1="180" x2="290" y2="180" />
         <line x1="30" y1="180" x2="30" y2="10" />
@@ -603,8 +1028,8 @@
     \[
       \begin{aligned}
         c_0 + (0)c_1 &= 0.5 \\
-        c_0 + (2)c_1 &= 3.5 \\
         c_0 + (1)c_1 &= 1.5 \\
+        c_0 + (2)c_1 &= 3.5 \\
         c_0 + (3)c_1 &= 7.5
       \end{aligned}
     \]
@@ -646,6 +1071,8 @@
     \[
       \therefore\ y^*(x) = 2.3x - 0.2
     \]
+
+    <hr class="short">
 
     <h4>Parabola Fitting</h4>
     \[
