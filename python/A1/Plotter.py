@@ -149,5 +149,34 @@ class Plotter:
                     xytext=(5, 5),
                     textcoords="offset points"
                 )
-                
-    
+
+    def plot_points_and_two_functions(self, x_series, pts, f1, f2, title=None, f1_name="f1(x)", f2_name="f2(x)", x_bounds=(-2,5), y_bounds=(-2,10)):
+        fig, ax = plt.subplots()
+
+        # Points (default colour)
+        xs = [p[0] for p in pts]
+        ys = [p[1] for p in pts]
+        ax.scatter(xs, ys, zorder=5, label="Points")
+
+        # Functions
+        ax.plot(x_series, f1(x_series), color='red', label=f1_name)
+        ax.plot(x_series, f2(x_series), color='green', label=f2_name)
+
+        # Axes
+        ax.axhline(0, linewidth=1, color='black')
+        ax.axvline(0, linewidth=1, color='black')
+
+        # Set viewing window
+        ax.set_xlim(x_bounds[0], x_bounds[1])
+        ax.set_ylim(y_bounds[0], y_bounds[1])
+
+        # Make x and y units have the same physical scale
+        # ax.set_aspect('equal', adjustable='box')
+
+        ax.set_xlabel("x")
+        ax.set_ylabel("y")
+        if title:
+            ax.set_title(title)
+
+        ax.grid()
+        ax.legend()

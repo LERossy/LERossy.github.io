@@ -1115,11 +1115,19 @@
       \therefore\ y^*(x) = 0.75x^2 + 0.05x + 0.55
     \]
 
+    <hr class="short">
+
+    <p>The following plot shows both the line and the parabola fitted to the set of points:</p>
+
+    <figure class="plot">
+      <img src="res/best_fit.png" alt="Best fit Line and Parabola for Set of Points">
+    </figure>
     <hr>
 
     <h3>Newton-Raphson Multivariate</h3>
 
-    <h4>Line</h4>
+    <h4>Line Fitting</h4>
+    <p>Define the Error Functions:</p>
     \[
       \begin{aligned}
         f_0(c_0, c_1) &= c_0 - 0.5 \\
@@ -1128,6 +1136,7 @@
         f_3(c_0, c_1) &= c_0 + 3c_1 - 7.5
       \end{aligned}
     \]
+    <p>Define the Jacobian:</p>
     \[
       J =
       \begin{bmatrix}
@@ -1145,7 +1154,7 @@
       \end{bmatrix}
     \]
 
-    <p>Pseudo-inverse of \(J\):</p>
+    <p>Pseudo-inverse of  J:</p>
     \[
       J^{-1} = (J^T J)^{-1} J^T
     \]
@@ -1217,7 +1226,10 @@
       \therefore\ y^*(x) = 2.3x - 0.2
     \]
 
-    <h4>Parabola</h4>
+    <hr class="short">
+
+    <h4>Parabola Fitting</h4>
+    <p>Define the Error Functions:</p>
     \[
       \begin{aligned}
         f_0(c_0, c_1, c_2) &= c_0 - 0.5 \\
@@ -1226,6 +1238,7 @@
         f_3(c_0, c_1, c_2) &= c_0 + 3c_1 + 9c_2 - 7.5
       \end{aligned}
     \]
+    <p>Define the Jacobian:</p>
     \[
       J =
       \begin{bmatrix}
@@ -1243,7 +1256,10 @@
       \end{bmatrix}
     \]
 
-    <p>Pseudo-inverse:</p>
+    <p>Pseudo-inverse of  J:</p>
+    \[
+      J^{-1} = (J^T J)^{-1} J^T
+    \]
     \[
       J^T J =
       \begin{bmatrix} 1 & 1 & 1 & 1 \\ 0 & 1 & 2 & 3 \\ 0 & 1 & 4 & 9 \end{bmatrix}
@@ -1345,6 +1361,87 @@
     \[
       \therefore\ y^*(x) = 0.75x^2 + 0.05x + 0.55
     \]
+
+    <p>Note that for both the line and parabola fitting, the exact solution is found after the first iteration. 
+        This is due to the nature of this problem: The objective functions are all linear combinations of the coefficients of a polynomial,
+        So the Jacobian only consists of constants and doesn't depend on the iterations of the parameters. 
+        This is similar to trying to apply the normal Newton-Raphson to a line: the algorithm converges after one step.
+        The initial guess doesn't matter, and will be further shown in the code below.</p>
+
+    <hr class="short">
+
+    <h4>Newton-Raphson Multivariate in Code</h4>
+    <p>The algorithm above was written out in Python, and works for any number of points and polynomials of any degree.</p>
+    <p>The following plot shows the iterations of fitting a line, with the initial guess being c0 = 1, c1 = 1:</p>
+    
+    <figure class="plot">
+      <img src="res/line_iterations.png" alt="Newton-Raphson Multivariate Iterations for Line Fitting">
+    </figure>
+
+    <p>The MSE for this fit is calculated as follows:</p>
+    \[
+      \begin{aligned}
+        MSE &= \frac{1}{n} \sum_{i=1}^{n} (y_i^* - y_i)^2 \\
+            &= \frac{1}{4} \Big[ (2.3(0) - 0.2 - 0.5)^2 + (2.3(1) - 0.2 - 1.5)^2 + (2.3(2) - 0.2 - 3.5)^2 + (2.3(3) - 0.2 - 7.5)^2 \Big] \\
+            &= \frac{1}{4} (0.49 + 0.36 + 0.81 + 0.64) \\
+        MSE &= 0.575
+      \end{aligned}
+    \]
+
+    <p>This plot shows the iterations of fitting a parabola to the points, with the initial guess being c0 = 1, c1 = 1, c2 = 1:</p>
+
+    <figure class="plot">
+      <img src="res/parabola_iterations.png" alt="Newton-Raphson Multivariate Iterations for Parabola Fitting">
+    </figure>
+
+    <p>The MSE for this fit is calculated as follows:</p>
+    \[
+      \begin{aligned}
+        MSE &= \frac{1}{n} \sum_{i=1}^{n} (y_i^* - y_i)^2 \\
+            &= \frac{1}{4} \Big[ (0.75(0)^2 + 0.05(0) + 0.55 - 0.5)^2 + (0.75(1)^2 + 0.05(1) + 0.55 - 1.5)^2 \\
+            &\qquad + (0.75(2)^2 + 0.05(2) + 0.55 - 3.5)^2 + (0.75(3)^2 + 0.05(3) + 0.55 - 7.5)^2 \Big] \\
+            &= \frac{1}{4} (0.0025 + 0.0225 + 0.0225 + 0.0025) \\
+        MSE &= 0.0125
+      \end{aligned}
+    \]
+
+    <p>The visual plots and MSE both show that the parabola is a better fit for this set of points.</p>
+
+    <hr>
+
+    <h2>Full Handwritten Solutions</h2>
+
+    <figure class="plot">
+      <img src="res/HW1.png" alt="Handwritten solutions, page 1">
+    </figure>
+
+    <figure class="plot">
+      <img src="res/HW2.png" alt="Handwritten solutions, page 2">
+    </figure>
+
+    <figure class="plot">
+      <img src="res/HW3.png" alt="Handwritten solutions, page 3">
+    </figure>
+
+    <figure class="plot">
+      <img src="res/HW4.png" alt="Handwritten solutions, page 4">
+    </figure>
+
+    <figure class="plot">
+      <img src="res/HW5.png" alt="Handwritten solutions, page 5">
+    </figure>
+
+    <figure class="plot">
+      <img src="res/HW6.png" alt="Handwritten solutions, page 6">
+    </figure>
+
+    <figure class="plot">
+      <img src="res/HW7.png" alt="Handwritten solutions, page 7">
+    </figure>
+
+    <figure class="plot">
+      <img src="res/HW8.png" alt="Handwritten solutions, page 8">
+    </figure>
 
     <hr>
   </body>
