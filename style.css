@@ -151,6 +151,21 @@ hr.short {
   text-align: center;
 }
 
+/* Bulleted list with accent-coloured markers */
+.bullet-list {
+  margin: 0.75em 0;
+  padding-left: 1.5em;
+  line-height: 1.5;
+}
+
+.bullet-list li {
+  margin-bottom: 0.4em;
+}
+
+.bullet-list li::marker {
+  color: var(--auxiliary);
+}
+
 /* Tab-style indent for sub-step labels like i), ii) */
 .indent {
   margin-left: 2em;

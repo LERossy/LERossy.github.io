@@ -7,7 +7,7 @@ import numpy as np
 
 class Plotter:
     
-    def plot_RMSEs(self, RMSEs, degree=1, data_type="training"):
+    def plot_polynomial_RMSEs(self, RMSEs, degree=1, data_type="training"):
         fig, ax = plt.subplots()
         polynomial_degrees = np.linspace(1, degree, degree)
         
@@ -26,8 +26,26 @@ class Plotter:
 
         ax.grid()
         ax.legend()
-        
-    def plot_RMSEs(self, RMSEs, K=[5], data_type="training"):
+
+    def plot_polynomial_RMSEs_log(self, RMSEs, degree=1, data_type="training"):
+        fig, ax = plt.subplots()
+        polynomial_degrees = np.linspace(1, degree, degree)
+
+        # Function
+        ax.plot(polynomial_degrees, RMSEs, label="RMSE vs Polynomial Degree")
+
+        ax.set_yscale('log')
+
+        ax.set_xlim(0, degree+1)
+        ax.set_xlabel("Polynomial Degree")
+        ax.set_ylabel("RMSE (log scale)")
+
+        ax.set_title(f"RMSE vs Polynomial Degree for {data_type} data")
+
+        ax.grid(which='both')
+        ax.legend()
+
+    def plot_gaussian_RMSEs(self, RMSEs, K=[5], data_type="training"):
             fig, ax = plt.subplots()
             
             # Function
@@ -56,12 +74,14 @@ class Plotter:
                 y += model_weights[i] * x**i
             return y
         
-        ax.scatter(training_data_x, training_data_y, label="Training Data", color='green')
+        ax.scatter(training_data_x, training_data_y, label="Training Data", s=20, color='green')
         ax.plot(x, model(x), label="Learned Polynomial")
-        ax.scatter(test_data_x, test_data_y, label="Test Data", color='orange')
+        ax.scatter(test_data_x, test_data_y, label="Test Data", s=15,color='orange')
         
         ax.set_xlabel(dimension)
         ax.set_ylabel("y")
+        
+        ax.set_title("Training data, Test data, and trained model for housing cost vs proportion of residential land zoned for lots over 25,000 sq.ft.")
 
         ax.grid()
         ax.legend()

@@ -151,8 +151,8 @@ for i in range(len(Ks)):
 plotter = Plotter.Plotter()
 
 # Part e
-plotter.plot_RMSEs(training_RMSEs, Ks, data_type="training")
-plotter.plot_RMSEs(test_RMSEs, Ks, data_type="test")
+plotter.plot_gaussian_RMSEs(training_RMSEs, Ks, data_type="training")
+plotter.plot_gaussian_RMSEs(test_RMSEs, Ks, data_type="test")
 
 # Part f
 K = 90

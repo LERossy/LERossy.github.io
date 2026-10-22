@@ -3,11 +3,20 @@ import numpy as np
 from pathlib import Path
 import Plotter
 
+# ----------------
+# Part 1 Functions
+# ----------------
+
+# Generate the PHI matrix based on the given (multidimensional) dataset and polynomial degree. 
+# Only monomials of x are included - no cross-terms.
 def generate_PHI(data, degree=1):
     if data.ndim == 1:                    # a single variable: treat it as one column
         data = data.reshape(-1, 1)
     indp_vars = data.shape[1]
 
+    # For each dimension, there will be K rows, where K is the given degree, and the number of basis functions.
+    # There will be one addition row of ones (hence the + 1) that serves as a bias term
+    # The number of columns is the number of data points, which must be larger than the number of rows.
     PHI = np.ones((degree * indp_vars + 1, len(data)))
     
     for n in range (len(data)):
@@ -16,7 +25,6 @@ def generate_PHI(data, degree=1):
                 PHI[k * indp_vars + l + 1][n] = data[n][l]**(k+1)
                 
     return PHI
-    
 
 # Assuming data is formatted as each row corresponding to one datapoint of N entries, 
 # where the first N-1 entries are the independent variables, and the Nth entry is the dependent variable
@@ -26,7 +34,6 @@ def polynomial_regression(data, degree=1):
 
     keep = X_raw.std(axis=0) > 0              # drop columns that never change
     X = X_raw[:, keep]
-    # X = (X - X.mean(axis=0)) / X.std(axis=0)
     indp_vars = X.shape[1]
 
     PHI = generate_PHI(X, degree)
@@ -82,13 +89,16 @@ def cross_validate(data, y, degree=1, folds=10, reg_const=0):
     avg_rmse = 0.0
     
     for i in range(folds):
+        # Split data into folds and assign training/test points for current iteration
         test = data[i * fold_size : (i+1) * fold_size]
         test_y = y[i * fold_size : (i+1) * fold_size]
         training = np.concatenate((data[:i * fold_size], data[(i+1) * fold_size:]))
         training_y = np.concatenate((y[:i * fold_size], y[(i+1) * fold_size:]))
         
+        # Calculate weights
         w = L2_1d_regularized_regression(training, training_y, degree, reg_const)
         
+        # Asses performance on test fold and add to average
         phi = generate_PHI(test, degree)
         y_hat = phi.T @ w
         squared_errors = (y_hat - test_y)**2
@@ -100,7 +110,9 @@ def cross_validate(data, y, degree=1, folds=10, reg_const=0):
         
 
     
-
+# -----
+# Setup
+# -----
 
 TRAINING_DATA_SIZE = 100
 MAX_DEGREE = 7
@@ -126,8 +138,11 @@ test_data_y = test_data[:, -1].astype(np.float64)
 test_RMSEs = []
 training_RMSEs = []
 
+# ------
 # Part a
+# ------
 for i in range(1, MAX_DEGREE+1):
+    # Create model given training data
     weights, training_data_X, training_data_y = polynomial_regression(training_data, i)
     # print(weights)
     
@@ -135,12 +150,14 @@ for i in range(1, MAX_DEGREE+1):
     if i == 1:
         print(weights)
 
+    # Assess model performance on training data
     phi = generate_PHI(training_data_X, i)
     y_hat = phi.T @ weights
     squared_errors = (y_hat - training_data_y)**2
     rmse = np.sqrt(np.mean(squared_errors))
     training_RMSEs.append(rmse)
     
+    # Assess model performance on test data
     phi = generate_PHI(test_data_X, i)
     y_hat = phi.T @ weights
     squared_errors = (y_hat - test_data_y)**2
@@ -152,24 +169,30 @@ for i in range(1, MAX_DEGREE+1):
     
 plotter = Plotter.Plotter()
 
-# Part a
-plotter.plot_RMSEs(training_RMSEs, degree=MAX_DEGREE, data_type="training")
-plotter.plot_RMSEs(test_RMSEs, degree=MAX_DEGREE, data_type="test")
+# Part a plots
+plotter.plot_polynomial_RMSEs(training_RMSEs, degree=MAX_DEGREE, data_type="training")
+plotter.plot_polynomial_RMSEs(test_RMSEs, degree=MAX_DEGREE, data_type="test")
+plotter.plot_polynomial_RMSEs_log(test_RMSEs, degree=MAX_DEGREE, data_type="test")
 
 print()
 
+# ------
 # Part c
+# ------
 FEATURE = 2
 
+# Visualize model, training and test points for 2nd dimension
 for i in range(1, MAX_DEGREE+1):
     weights, training_data_X, training_data_y = polynomial_regression_1d_vis(training_data, FEATURE, i)
     print(weights)
     
-    plotter.plot_1d_training_model_test(training_data_X, training_data_y, weights, test_data_X[:, FEATURE-1], test_data_y, i, dimension="proportion of residential land zoned for lots over 25,000 sq.ft.")
+    plotter.plot_1d_training_model_test(training_data_X, training_data_y, weights, test_data_X[:, FEATURE-1], test_data_y, i, dimension="ZN")
 
 print()
     
+# ------
 # Part d
+# ------
 FEATURE = 2
 POLYNOMIAL = 8
 FOLDS = 10
@@ -179,6 +202,7 @@ avg_validation_set_errors = []
 X = training_data[:, FEATURE-1].astype(np.float64)
 y = training_data[:, -1].astype(np.float64)
 
+# Create a more robust model with regularization and cross-validation
 for reg_const in lambdas:
     avg_error = cross_validate(X, y, POLYNOMIAL, FOLDS, reg_const)
     avg_validation_set_errors.append(avg_error)
