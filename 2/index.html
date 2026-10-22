@@ -41,23 +41,21 @@
       The remainder was used as testing data to evaluate the performances of the models.
       No regularization was used.</p>
 
-    <p>The following is a plot of training error (in RMS error) versus polynomial degree.</p>
+    <p>The following is a plot of training error (in RMS error) versus polynomial degree:</p>
 
-    <figure class="plot">
+    <figure class="plot full">
       <img src="res\RMSE_Polynomial_Training.png" alt="Plot of the error between the trained model and training data points for each polynomial degree">
     </figure>
 
+    <p>The following is a plot of test error (in RMS error) versus polynomial degree:</p>
 
-
-    <p>The following is a plot of test error (in RMS error) versus polynomial degree.</p>
-
-    <figure class="plot">
+    <figure class="plot full">
       <img src="res\RMSE_Polynomial_Test.png" alt="Plot of the error between the trained model and test data points for each polynomial degree">
     </figure>
 
-    <p>Because the error goes up to very high value, an additional plot at log scale is provided to better visualize the values:</p>
+    <p>Because the error goes up to very high values, an additional plot at log scale is provided for better visualization:</p>
 
-    <figure class="plot">
+    <figure class="plot full">
       <img src="res\RMSE_Polynomial_Test_Log.png" alt="Plot of the error between the trained model and test data points at Log scale for each polynomial degree">
     </figure>
     
@@ -65,25 +63,25 @@
 
     <table class="data-table">
       <thead>
-        <tr><th>Training RMSEs</th><th>Test RMSEs</th></tr>
+        <tr><th>Degree</th><th>Training RMSE</th><th>Test RMSE</th></tr>
       </thead>
       <tbody>
-        <tr><td>2.037</td><td>36.44</td></tr>
-        <tr><td>1.578</td><td>1097</td></tr>
-        <tr><td>1.449</td><td>4.867 &times; 10<sup>4</sup></td></tr>
-        <tr><td>3.346</td><td>2.186 &times; 10<sup>7</sup></td></tr>
-        <tr><td>144.1</td><td>1.811 &times; 10<sup>10</sup></td></tr>
-        <tr><td>745.2</td><td>1.17 &times; 10<sup>13</sup></td></tr>
-        <tr><td>169.3</td><td>4.023 &times; 10<sup>15</sup></td></tr>
+        <tr><td>1</td><td>2.037</td><td>36.44</td></tr>
+        <tr><td>2</td><td>1.578</td><td>1097</td></tr>
+        <tr><td>3</td><td>1.449</td><td>4.867 &times; 10<sup>4</sup></td></tr>
+        <tr><td>4</td><td>3.346</td><td>2.186 &times; 10<sup>7</sup></td></tr>
+        <tr><td>5</td><td>144.1</td><td>1.811 &times; 10<sup>10</sup></td></tr>
+        <tr><td>6</td><td>745.2</td><td>1.17 &times; 10<sup>13</sup></td></tr>
+        <tr><td>7</td><td>169.3</td><td>4.023 &times; 10<sup>15</sup></td></tr>
       </tbody>
     </table>
 
     <h4>Notes</h4>
 
     <ul class="bullet-list">
-      <li>For the training data RMSEs, the the RMSE does increase over the first 3 polynomial degrees, 
+      <li>For the training data RMSEs, the RMSE does increase over the first 3 polynomial degrees, 
         however, starting at degree 4, the RMSEs's increase by 2 orders of magnitude with a significant jump at degree 6.</li>
-      <li>For the test data RMSEs, it's clear that they increase increase exponentially with polynomial degree,
+      <li>For the test data RMSEs, it's clear that they increase exponentially with polynomial degree,
         especially considering that the log scale graph is largely linear.</li>
       <li>The reason the RMSE gets worse as the degree increases is likely due to poor system conditioning 
         and the different scales of each feature in the dataset, ultimately resulting in overfitting and floating point error.</li>
@@ -93,12 +91,12 @@
         For this matrix to have an inverse, \((K \cdot L + 1) \leq N\), otherwise it is not full rank. 
         And the closer it is to N, the more singular it becomes - overfitting.</li>
       <li>Degrees 1-3 follow the expected trend of decreasing RMSE. This makes sense because for degree 3, \(\Phi \Phi^T \) has shape \(40 \times 40 \), which is reasonable comapared to \(N\). 
-        Beyond that, the higher polynomials result in very high and very small numbers. For example, feature 12 is usually close to 400, while feature 1 is usually between 0 and 1.
+        Beyond that, the higher polynomials result in very high and very small numbers in \(\Phi\). For example, feature 12 is usually close to 400, while feature 1 is usually between 0 and 1.
         Raise that to the 7th power, and you get a huge range of values, that even with float64 introduce inaccuracies through the matrix multiplications. That's why the errors explode.
       </li>
-      <li>This applies to the test data as well, but it's worse because the model also suffers from overfitting especially at higher polynomials</li>
+      <li>This applies to the test data as well, but it's worse because the model also suffers from overfitting especially at higher polynomials.</li>
       <li>Past degree 3, the results simply aren't reliable, hence the inexplicable spike at degree 6 in the training data, 
-        and the explosive growth in error for the test data</li>
+        and the explosive growth in error for the test data.</li>
     </ul>
 
     <hr class="short">
@@ -136,10 +134,10 @@
         weighted distances to five Boston employment centres (DIS) has weight 0.007627.
       </li>
       <li>This means house price depends much more on the number of rooms than the distance to employment centers.
-        This makes sense on a practical level, because number of rooms is generally more important when choosing a house and assessing its value.
+        This makes sense on a practical level, because the number of rooms is generally more important when choosing a house and assessing its value.
         So the weights are reasonable.
       </li>
-      <li>Comparing them to the rest of the weights, the RM one is one of the higher ones, which, again, makes sense.
+      <li>Comparing them to the rest of the weights, the RM one is one of the higher weights, which, again, makes sense.
         DIS is one of several weights at the 0.001 magnitude, like ZN - proportion of residential land zoned for lots over 25,000 sq.ft. This is also reasonable.
       </li>
     </ul>
@@ -148,25 +146,25 @@
 
     <h3>c) Polynomial Regression up to Degree 7 for One Feature</h3>
 
-    <p>Here, a new Python function - polynomial_regression_1d_vis() - was created to perform polynomial regression for one feature for better visualization.
-      The training data points, learned polynomial, and test data points were then plotted for degrees 1-7. Do not forget
-      Out of them, the following 3 of plots, are presented as they reflect polynomial regression behaviour.</p>
+    <p>Here, a new Python function - polynomial_regression_1d_vis() - was created to perform polynomial regression on one feature only for better visualization.
+      The training data points, learned polynomial, and test data points were then plotted for degrees 1-7.
+      Out of them, the following 3 of plots are presented as they reflect polynomial regression behaviour.</p>
 
     <P>The first plot is for a degree 2 polynomial:</P>
     
-    <figure class="plot">
+    <figure class="plot full">
       <img src="res\Training_Test_Model_2.png" alt="Plot of training & test data points and the learned polynomial for degree 2 regression on the second dataset feature">
     </figure>
 
     <p>Degree 4:</p>
     
-    <figure class="plot">
+    <figure class="plot full">
       <img src="res\Training_Test_Model_4.png" alt="Plot of training & test data points and the learned polynomial for degree 4 regression on the second dataset feature">
     </figure>
 
     <p>Degree 7:</p>
     
-    <figure class="plot">
+    <figure class="plot full">
       <img src="res\Training_Test_Model_7.png" alt="Plot of training & test data points and the learned polynomial for degree 7 regression on the second dataset feature">
     </figure>
 
@@ -175,13 +173,13 @@
     <ul class="bullet-list">
       <li>The degree 2 polynomial generally follows the training data well. There are some inaccuracies, but it captures the general trend. 
         Though not shown, degrees 1 and 3 behave similarly.</li>
-      <li>At degree 4, some overfitting starts to occur. Especially since there's no training data between \(x = 30 \) and \(x = 70 \),
-        the curve bulges upward slightly with no direction. It so happens that this bulge loosely follows the test data, but this is never guaranteed.
+      <li>At degree 4, some overfitting starts to occur. Especially since there's no training data between \(x = 30 \) and \(x = 70, \)
+        the curve bulges upward slightly. It so happens that this bulge loosely follows the test data, but this is never guaranteed.
       </li>
       <li>For degree 7, significant overfitting is clearly visible. The cluster of training points on the lower and higher end of the range of
          x-values dominate the behaviour of the curve, while in the middle, it goes wild. For this region, the uncertainty and error between the model and test data is significant.</li>
       <li>Overall, comparing the distribution of training and test data, it's clear that there's bias in the training set, which does translate to the model.
-        This is visible in all the plots, as the curves tend to miss the trends of the test data.
+        This is visible in all the plots, as the curves tend to miss some of the trends of the test data.
       </li>
     </ul>
 
@@ -189,20 +187,128 @@
 
     <h3>d) L2-Regularized Polynomial Degree 8 Regression for the 2nd Dataset Feature</h3>
 
-    <p>A new Pyython function - L2_1d_regularized_regression() - was created to implement L2-regularized regression using the first 100 data points in the dataset, 
+    <p>A new Pyython function - L2_1d_regularized_regression() - was created to implement L2-regularized (Ridge) regression using the first 100 data points in the dataset, 
       but only for the 2nd feature. The regression was performed with a degree 8 polynomial and each of the following values of \(\lambda \): {0; 0:01; 0:1; 1; 10; 100; 1000}. 
       Finally, 10-fold cross-validation was used to decide on the best value of \(\lambda \).</p>
 
     <p>The result is plotted as average validation set error versus the regularizing constant. The unregularized result, \(\lambda = 0 \)
       appears as a red dotted horizontal line as a baseline.</p>
 
-    <figure class="plot">
+    <figure class="plot full">
       <img src="res\Avg_Val_Err_VS_Reg_Const_Polynomial.png" alt="Plot of average validation error vs regularizing constant for degree 8 regression on the second dataset feature">
     </figure>
+
+    <p>The values are also tabulated here for reference:</p>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>&lambda;</th><th>Average Validation Error</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>0</td><td>8.503 &times; 10<sup>4</sup></td></tr>
+        <tr><td>0.01</td><td>8.153 &times; 10<sup>4</sup></td></tr>
+        <tr><td>0.1</td><td>3.634 &times; 10<sup>4</sup></td></tr>
+        <tr><td>1</td><td>171.2</td></tr>
+        <tr><td>10</td><td>5951</td></tr>
+        <tr><td>100</td><td>4143</td></tr>
+        <tr><td>1000</td><td>2601</td></tr>
+      </tbody>
+    </table>
 
     <p>Based on the error plot above, it's clear that the regularizing constant \(\lambda = 1\) results in the smallest error when performing cross-validation, 
       and should therefore be used to construct the model for the best performance.</p>
 
     <hr>
+
+    <h2>Part 2: Gaussian Basis Function Regression</h2>
+
+    <p>Here, Gaussian Basis Function Regression is performed with the first 100 points in the dataset as training data.
+      The rest serve as test data.
+    </p>
+
+    <h3>e) Gaussian Regression with 5 to 95 Basis Functions</h3>
+
+    <p>A Python function gaussian_regression() was created and used to create a model for each of the following number of K basis functions:
+      {5; 15; 25; ... ; 95}. A random set of K points in the training data serve as the centers of the basis
+functions. No regularization is used.</p>
+
+    <p>The following is a plot of training error (in RMS error) versus number of Gaussian basis functions K:</p>
+
+    <figure class="plot full">
+      <img src="res\RMSE_Gaussian_Training.png" alt="Plot of the error between the trained model and training data points for each number of Gaussian basis functions">
+    </figure>
+
+    <p>The following is a plot of test error (in RMS error) versus number of Gaussian basis functions K:</p>
+
+    <figure class="plot full">
+      <img src="res\RMSE_Gaussian_Test.png" alt="Plot of the error between the trained model and test data points for each number of Gaussian basis functions">
+    </figure>
+
+    <p>Finally, these RMSEs are tabulated here for reference:</p>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>K</th><th>Training RMSEs</th><th>Test RMSEs</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>5</td><td>5.746</td><td>9.842</td></tr>
+        <tr><td>15</td><td>5.665</td><td>9.83</td></tr>
+        <tr><td>25</td><td>4.808</td><td>9.844</td></tr>
+        <tr><td>35</td><td>4.057</td><td>9.899</td></tr>
+        <tr><td>45</td><td>4.512</td><td>9.844</td></tr>
+        <tr><td>55</td><td>4.34</td><td>9.839</td></tr>
+        <tr><td>65</td><td>4.243</td><td>9.84</td></tr>
+        <tr><td>75</td><td>2.96</td><td>9.831</td></tr>
+        <tr><td>85</td><td>3.024</td><td>9.875</td></tr>
+        <tr><td>95</td><td>1.635</td><td>9.911</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Notes:</h4>
+
+    <ul class="bullet-list">
+      <li>Though not smooth, the training RMSEs follow a general downward trend as the number of basis functions increases, as would normally be expected.
+        This would indicate the systems are better conditioned than the polynomial ones.</li>
+      <li>The RMSEs for the test data are stable within the 9.8-10 range, which is much better performance than seen previously with polynomial basis functions.</li>
+      <li>The trained models do not seem to suffer from overfitting or floating-point error.</li>
+    </ul>
+
+    <hr class="short">
+
+    <h3>f) L2-Regularized Gaussian Regression for K = 90</h3>
+
+    <p>A new Python function - L2_regularized_gaussian_regression() - was created to implement L2-regularized regression using the first 100 data points in the dataset. 
+      The regression was performed with K = 90 basis functions and each of the following values of \(\lambda \): {0; 0:01; 0:1; 1; 10; 100; 1000}. 
+      Finally, 10-fold cross-validation was used to decide on the best value of \(\lambda \).</p>
+
+    <p>The result is plotted as average validation set error versus the regularizing constant. The unregularized result, \(\lambda = 0 \)
+      appears as a red dotted horizontal line as a baseline.</p>
+
+    <figure class="plot full">
+      <img src="res\Avg_Val_Err_VS_Reg_Const_Gaussian.png" alt="Plot of average validation error vs regularizing constant for K = 90 Gaussian regression">
+    </figure>
+
+    <p>Since some of the results are close, they are tabulated here for reference:</p>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>&lambda;</th><th>Average Validation Error</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>0</td><td>7.716</td></tr>
+        <tr><td>0.01</td><td>6.812</td></tr>
+        <tr><td>0.1</td><td>5.693</td></tr>
+        <tr><td>1</td><td>5.674</td></tr>
+        <tr><td>10</td><td>6.004</td></tr>
+        <tr><td>100</td><td>12.68</td></tr>
+        <tr><td>1000</td><td>20.99</td></tr>
+      </tbody>
+    </table>
+
+    <p>Based on the error plot above, and the tabulated values, the regularizing constant \(\lambda = 1\) results in the smallest error when performing cross-validation, 
+      and should therefore be used to construct the model for the best performance.</p>
+
+    <hr>
+
   </body>
 </html>

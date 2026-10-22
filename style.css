@@ -139,6 +139,11 @@ hr.short {
   font-size: 0.9em;
 }
 
+/* Full-width variant: <figure class="plot full"> */
+.plot.full {
+  width: 100%;
+}
+
 /* Centered inline SVG graph, with extra space above (e.g. below a table) */
 .svg-plot {
   display: block;
