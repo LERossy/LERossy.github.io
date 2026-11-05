@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assignment 3</title>
     <link rel="stylesheet" href="../style.css">
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
   </head>
 
   <body>
@@ -19,5 +25,369 @@
       </nav>
       <h1>Assignment 3</h1>
     </header>
+
+    <h2>Part 1: PCA by hand</h2>
+
+    <h3>1. PCA on Given Dataset</h3>
+
+    <p>Dataset:</p>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>\(x_1\)</th><th>\(x_2\)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>&minus;2</td><td>&minus;1</td></tr>
+        <tr><td>&minus;1</td><td>0</td></tr>
+        <tr><td>0</td><td>1</td></tr>
+        <tr><td>1</td><td>2</td></tr>
+        <tr><td>2</td><td>3</td></tr>
+      </tbody>
+    </table>
+
+    \[ N = 5 \]
+
+    <svg class="svg-plot" width="300" height="280" viewBox="0 0 300 280" role="img" aria-label="Scatter plot of the five data points">
+      <g stroke="currentColor" fill="none" stroke-width="1.5">
+        <line x1="20" y1="180" x2="280" y2="180" />
+        <line x1="150" y1="270" x2="150" y2="20" />
+        <line x1="70" y1="176" x2="70" y2="184" />
+        <line x1="110" y1="176" x2="110" y2="184" />
+        <line x1="190" y1="176" x2="190" y2="184" />
+        <line x1="230" y1="176" x2="230" y2="184" />
+        <line x1="146" y1="220" x2="154" y2="220" />
+        <line x1="146" y1="140" x2="154" y2="140" />
+        <line x1="146" y1="100" x2="154" y2="100" />
+        <line x1="146" y1="60" x2="154" y2="60" />
+      </g>
+      <g fill="currentColor" font-size="12" text-anchor="middle">
+        <text x="70" y="198">&minus;2</text>
+        <text x="110" y="198">&minus;1</text>
+        <text x="190" y="198">1</text>
+        <text x="230" y="198">2</text>
+        <text x="138" y="224">&minus;1</text>
+        <text x="140" y="144">1</text>
+        <text x="140" y="104">2</text>
+        <text x="140" y="64">3</text>
+        <text x="290" y="185" font-size="20" font-style="italic">x₁</text>
+        <text x="150" y="14" font-size="20" font-style="italic">x₂</text>
+        <circle cx="70" cy="220" r="3.5" />
+        <circle cx="110" cy="180" r="3.5" />
+        <circle cx="150" cy="140" r="3.5" />
+        <circle cx="190" cy="100" r="3.5" />
+        <circle cx="230" cy="60" r="3.5" />
+      </g>
+    </svg>
+
+    <h4>Center the Data</h4>
+
+    \[
+      \begin{aligned}
+        \mu(x_1) &= \frac{1}{N} \sum_{i=1}^{N} x_{1i} = \frac{-2 - 1 + 0 + 1 + 2}{5} = 0 \\
+        \mu(x_2) &= \frac{1}{N} \sum_{i=1}^{N} x_{2i} = \frac{-1 + 0 + 1 + 2 + 3}{5} = 1
+      \end{aligned}
+    \]
+    \[
+      \hat{m} = \begin{bmatrix} \mu(x_1) \\ \mu(x_2) \end{bmatrix} = \begin{bmatrix} 0 \\ 1 \end{bmatrix}
+    \]
+
+    <p>Subtract the mean:</p>
+    \[
+      \begin{aligned}
+        x_{1i}' &= x_{1i} - \mu(x_1) \\
+        x_{2i}' &= x_{2i} - \mu(x_2)
+      \end{aligned}
+    \]
+
+    <table class="data-table">
+      <thead>
+        <tr><th>\(x_1'\)</th><th>\(x_2'\)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>&minus;2</td><td>&minus;2</td></tr>
+        <tr><td>&minus;1</td><td>&minus;1</td></tr>
+        <tr><td>0</td><td>0</td></tr>
+        <tr><td>1</td><td>1</td></tr>
+        <tr><td>2</td><td>2</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Covariance Matrix</h4>
+
+    <p>The means are now zero, so</p>
+    \[ \hat{\Sigma} = \frac{1}{N} \sum_{n=1}^{N} x_n x_n^T - \hat{m}\hat{m}^T \]
+    <p>becomes</p>
+    \[
+      \begin{aligned}
+        \hat{\Sigma} &= \frac{1}{N} \sum_{n=1}^{N} x_n x_n^T \\
+        &= \frac{1}{5} \left(
+          \begin{bmatrix} -2 \\ -2 \end{bmatrix} \begin{bmatrix} -2 & -2 \end{bmatrix} +
+          \begin{bmatrix} -1 \\ -1 \end{bmatrix} \begin{bmatrix} -1 & -1 \end{bmatrix} +
+          \begin{bmatrix} 0 \\ 0 \end{bmatrix} \begin{bmatrix} 0 & 0 \end{bmatrix} +
+          \begin{bmatrix} 1 \\ 1 \end{bmatrix} \begin{bmatrix} 1 & 1 \end{bmatrix} +
+          \begin{bmatrix} 2 \\ 2 \end{bmatrix} \begin{bmatrix} 2 & 2 \end{bmatrix}
+        \right) \\
+        &= \frac{1}{5} \left(
+          \begin{bmatrix} 4 & 4 \\ 4 & 4 \end{bmatrix} +
+          \begin{bmatrix} 1 & 1 \\ 1 & 1 \end{bmatrix} +
+          \begin{bmatrix} 0 & 0 \\ 0 & 0 \end{bmatrix} +
+          \begin{bmatrix} 1 & 1 \\ 1 & 1 \end{bmatrix} +
+          \begin{bmatrix} 4 & 4 \\ 4 & 4 \end{bmatrix}
+        \right) \\
+        &= \frac{1}{5} \begin{bmatrix} 10 & 10 \\ 10 & 10 \end{bmatrix}
+      \end{aligned}
+    \]
+    \[ \hat{\Sigma} = \begin{bmatrix} 2 & 2 \\ 2 & 2 \end{bmatrix} \]
+
+    <h4>Eigen Decomposition</h4>
+
+    \[
+      \begin{aligned}
+        \Sigma v_i &= \lambda_i v_i \\
+        (\Sigma - \lambda_i I) v_i &= 0 \\
+        \det(\Sigma - \lambda I) &= 0
+      \end{aligned}
+    \]
+    \[
+      \begin{aligned}
+        \det\left( \begin{bmatrix} 2 - \lambda & 2 \\ 2 & 2 - \lambda \end{bmatrix} \right)
+        &= (2 - \lambda)^2 - 2^2 \\
+        &= 4 - 4\lambda + \lambda^2 - 4 \\
+        &= \lambda^2 - 4\lambda \\
+        &= \lambda(\lambda - 4)
+      \end{aligned}
+    \]
+    \[ \therefore\ \lambda = 0,\ 4 \]
+
+    <h5>For \(\lambda_1 = 4\)</h5>
+    \[
+      \begin{aligned}
+        (\Sigma - \lambda_1 I) v_1 &= 0 \\
+        \begin{bmatrix} 2 - 4 & 2 \\ 2 & 2 - 4 \end{bmatrix} \begin{bmatrix} v_1 \\ v_2 \end{bmatrix} &= \begin{bmatrix} 0 \\ 0 \end{bmatrix} \\
+        \begin{bmatrix} -2 & 2 \\ 2 & -2 \end{bmatrix} \begin{bmatrix} v_1 \\ v_2 \end{bmatrix} &= \begin{bmatrix} 0 \\ 0 \end{bmatrix} \\
+        2v_1 &= 2v_2
+      \end{aligned}
+    \]
+    \[ \rightarrow v_1 = \begin{bmatrix} 2 \\ 2 \end{bmatrix} \]
+    <p>Normalize:</p>
+    \[ v_1 = \begin{bmatrix} \frac{1}{\sqrt{2}} \\ \frac{1}{\sqrt{2}} \end{bmatrix} \]
+
+    <h5>For \(\lambda_2 = 0\)</h5>
+    \[
+      \begin{aligned}
+        (\Sigma - \lambda_2 I) v_2 &= 0 \\
+        \begin{bmatrix} 2 & 2 \\ 2 & 2 \end{bmatrix} \begin{bmatrix} v_1 \\ v_2 \end{bmatrix} &= \begin{bmatrix} 0 \\ 0 \end{bmatrix} \\
+        2v_1 &= -2v_2
+      \end{aligned}
+    \]
+    \[ \rightarrow v_2 = \begin{bmatrix} 2 \\ -2 \end{bmatrix} \]
+    <p>Normalize:</p>
+    \[ v_2 = \begin{bmatrix} \frac{1}{\sqrt{2}} \\ -\frac{1}{\sqrt{2}} \end{bmatrix} \]
+
+    <h5>Result</h5>
+    \[
+      \therefore\ V = \begin{bmatrix} \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}} \\ \frac{1}{\sqrt{2}} & -\frac{1}{\sqrt{2}} \end{bmatrix}
+      \quad \text{(columns: PC1, PC2)}
+    \]
+    \[
+      \lambda = 4,\ 0 \qquad
+      \Lambda = \begin{bmatrix} 4 & 0 \\ 0 & 0 \end{bmatrix}
+    \]
+
+    <hr class="short">
+
+    <h3>2. L2 Norm Reconstruction Error for \(x = (3, 3)\)</h3>
+
+    <p>Project the point onto the first PC, \(v_1 = \begin{bmatrix} \frac{1}{\sqrt{2}} \\ \frac{1}{\sqrt{2}} \end{bmatrix}\):</p>
+    \[
+      \begin{aligned}
+        y &= v_1^T (x - \hat{m}) \\
+        &= \begin{bmatrix} \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}} \end{bmatrix}
+          \left( \begin{bmatrix} 3 \\ 3 \end{bmatrix} - \begin{bmatrix} 0 \\ 1 \end{bmatrix} \right) \\
+        &= \begin{bmatrix} \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}} \end{bmatrix} \begin{bmatrix} 3 \\ 2 \end{bmatrix} \\
+        y &= \frac{5}{\sqrt{2}}
+      \end{aligned}
+    \]
+
+    <p>Reconstruct:</p>
+    \[
+      \begin{aligned}
+        \hat{x} &= \hat{m} + v_1 y \\
+        &= \begin{bmatrix} 0 \\ 1 \end{bmatrix} + \begin{bmatrix} \frac{1}{\sqrt{2}} \\ \frac{1}{\sqrt{2}} \end{bmatrix} \cdot \frac{5}{\sqrt{2}} \\
+        &= \begin{bmatrix} 0 \\ 1 \end{bmatrix} + \begin{bmatrix} \frac{5}{2} \\ \frac{5}{2} \end{bmatrix} \\
+        \hat{x} &= \begin{bmatrix} 2.5 \\ 3.5 \end{bmatrix}
+      \end{aligned}
+    \]
+
+    <p>L2 norm:</p>
+    \[
+      \begin{aligned}
+        \text{Error} &= \lVert x - \hat{x} \rVert_2 \\
+        &= \sqrt{(x_1 - \hat{x}_1)^2 + (x_2 - \hat{x}_2)^2} \\
+        &= \sqrt{(3 - 2.5)^2 + (3 - 3.5)^2} \\
+        \text{Error} &= \frac{1}{\sqrt{2}}
+      \end{aligned}
+    \]
+
+    <hr class="short">
+
+    <h3>3. L2 Norm Reconstruction Error for \(x = (3, 4)\)</h3>
+
+    <p>Project the point onto the first PC, \(v_1 = \begin{bmatrix} \frac{1}{\sqrt{2}} \\ \frac{1}{\sqrt{2}} \end{bmatrix}\):</p>
+    \[
+      \begin{aligned}
+        y &= v_1^T (x - \hat{m}) \\
+        &= \begin{bmatrix} \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}} \end{bmatrix}
+          \left( \begin{bmatrix} 3 \\ 4 \end{bmatrix} - \begin{bmatrix} 0 \\ 1 \end{bmatrix} \right) \\
+        &= \begin{bmatrix} \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}} \end{bmatrix} \begin{bmatrix} 3 \\ 3 \end{bmatrix} \\
+        y &= \frac{6}{\sqrt{2}} = 3\sqrt{2}
+      \end{aligned}
+    \]
+
+    <p>Reconstruct:</p>
+    \[
+      \begin{aligned}
+        \hat{x} &= \hat{m} + v_1 y \\
+        &= \begin{bmatrix} 0 \\ 1 \end{bmatrix} + \begin{bmatrix} \frac{1}{\sqrt{2}} \\ \frac{1}{\sqrt{2}} \end{bmatrix} \cdot 3\sqrt{2} \\
+        &= \begin{bmatrix} 0 \\ 1 \end{bmatrix} + \begin{bmatrix} 3 \\ 3 \end{bmatrix} \\
+        \hat{x} &= \begin{bmatrix} 3 \\ 4 \end{bmatrix}
+      \end{aligned}
+    \]
+
+    <p>L2 norm:</p>
+    <p>Since \(x = \hat{x}\),</p>
+    \[ \text{Error} = 0 \]
+
+    <hr>
+
+    <h2>Part 2: Data Visualization</h2>
+
+    <p>The following plot marginalizes the first feature, sepal length, onto a single axis, 
+      with different colours representing the different classes.</p>
+    <figure class="plot full">
+      <img src="res/Marginalization_1D.png" alt="Iris data marginalized onto 1 feature, colored by class">
+    </figure>
+
+    <p>For this feature only, a boundary can be established between Iris Setosa and Iris Virginica. 
+      Otherwise, there's too much overlap between the classes to establish a clear boundary.</p>
+
+    <p>The following plot marginalizes the first feature, sepal length, onto the x-axis, 
+      and the second feature, sepal width, onto the y-axis.
+      Different colours represent the different classes.</p>
+    <figure class="plot full">
+      <img src="res/Marginalization_2D.png" alt="Iris data marginalized onto 2 features, colored by class">
+    </figure>
+
+    <p>For this marginalization, Iris Setosa is clearly its own cluster. 
+      However, there's a lot of overlap between Iris Versicolor and Iris Virginica that classification is much more uncertain.
+      Despite that, there are still some regions that are distinctly Iris Versicolor or Iris Virginica.</p>
+    
+    <p>The following plot marginalizes the first feature, sepal length, onto the x-axis, 
+      the second feature, sepal width, onto the y-axis and the third feature, petal length, onto the z-axis.
+      Different colours represent the different classes.</p>
+
+    <figure class="plot full">
+      <img src="res/Marginalization_3D.png" alt="Iris data marginalized onto 3 features, colored by class">
+    </figure>
+
+    <p>In this marginalization, there are clear, distinct clusters for Iris Setosa, Iris Versicolor and Iris Virginca.</p>
+  
+    <hr>
+
+    <h2>Part 3: PCA</h2>
+
+    <p>Following the basic data marginalization, PCA was performed on the dataset, and then marginalized once more onto the Principal Components.</p>
+
+    <p>These are the first three principal components that describe the data:</p>
+
+    \[
+      V_1 = \begin{bmatrix} 0.3616 \\ -0.0823 \\ 0.8566 \\ 0.3588 \end{bmatrix} \qquad
+      V_2 = \begin{bmatrix} 0.6565 \\ 0.7297 \\ -0.1758 \\ -0.0747 \end{bmatrix} \qquad
+      V_3 = \begin{bmatrix} -0.5810 \\ 0.5964 \\ 0.0725 \\ 0.5491 \end{bmatrix}
+    \]
+
+    <p>The following plot marginalizes the Iris data onto the 1st Principal Component, 
+      with different colours representing the different classes.</p>
+    <figure class="plot full">
+      <img src="res/PCA_Marginalization_1D.png" alt="Iris data marginalized onto the first Principal Component, colored by class">
+    </figure>
+
+    <p>The following plot marginalizes the Iris data onto the first two Principal Components, 
+      with different colours representing the different classes.</p>
+    <figure class="plot full">
+      <img src="res/PCA_Marginalization_2D.png" alt="Iris data marginalized onto the first two Principal Components, colored by class">
+    </figure>
+
+    <p>The following plot marginalizes the Iris data onto the first three Principal Components, 
+      with different colours representing the different classes.</p>
+    <figure class="plot full">
+      <img src="res/PCA_Marginalization_3D.png" alt="Iris data marginalized onto the first three Principal Components, colored by class">
+    </figure>
+
+    <p>As can be seen in the plots, following PCA, the clustering of classes is a lot clearer, even as early as the 1D marginalization.</p>
+
+    <hr>
+
+    <h2>Part 4: Data Compression</h2>
+
+    <h4>1. How much of the variance is explained by the previous 2D representation of the data?</h4>
+    <p>Using scikit's PCA explained_variance_ratio_ attribute, we get that PC1 accounts for 0.92461621, or 92.56% of the variance,
+      and PC2 accounts for 0.05301557, or 5.30% of the variance. So in total, they explain 97.86% of the variance in the data.</p>
+
+    <h4>2. How many PCs are required to explain 50% of the variance in the data?</h4>
+    <p>From above, we know that 1 Principal Component is enough to explain 50% of the variance in the data.</p>
+
+    <hr>
+    
+    <h2>Part 5: Non-linear Components</h2>
+
+    <p>To see if a non-linear compression algorithm would fit the data better, ISOMAP was run on the Iris data.</p>
+
+    <p>The following are the marginalized plots for 1, 2 and 3 components:</p>
+    
+    <figure class="plot full">
+      <img src="res/ISOMAP_Marginalization_1D.png" alt="Iris data marginalized onto one Component following ISOMAP, colored by class">
+    </figure>
+
+    <figure class="plot full">
+      <img src="res/ISOMAP_Marginalization_2D.png" alt="Iris data marginalized onto two Components following ISOMAP, colored by class">
+    </figure>
+
+    <figure class="plot full">
+      <img src="res/ISOMAP_Marginalization_3D.png" alt="Iris data marginalized onto three Components following ISOMAP, colored by class">
+    </figure>
+
+    <p>The ISOMAP reconstruction errors for 1D, 2D and 3D are as follows:</p>
+
+    \[
+      1D: 0.9666  \qquad
+      2D: 0.4364 \qquad
+      3D: 0.2973
+    \]
+
+    <p>Comparing the clustering of classes between PCA and ISOMAP, they're both very similar in terms of how distinct the class clusters.
+      However, PCA has slightly less overlap between classes than ISOMAP, especially for 1 Component.
+    </p>
+
+    <p>Furthermore, when comparing PCA's explained variance for each successive component added, 
+      and ISOMAP's reconstruction error for each successive component, it would seem that ISOMAP is more lossy in compression.
+      One component in PCA explains over 92% of the variance, while one component in ISOMAP has over 0.96 reconstruction error.
+      So overall, PCA would be preferable for this dataset.</p>
+
+    <hr>
+
+    <h2>Handwritten Notes (Part 1):</h2>
+    
+    <figure class="plot">
+      <img src="res/Handwritten1.png" alt="Handwritten Notes 1">
+    </figure>
+    <figure class="plot">
+      <img src="res/Handwritten2.png" alt="Handwritten Notes 2">
+    </figure>
+    <figure class="plot">
+      <img src="res/Handwritten3.png" alt="Handwritten Notes 3">
+    </figure>
+
+    <hr>
   </body>
 </html>
