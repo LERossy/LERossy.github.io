@@ -29,9 +29,10 @@
     <h2>Naive-Bayes Classification of Text Documents</h2>
 
     <p>In this assignment, a simple Naive-Bayes model was created to classify review text documents as positive or negative. 
-      A given dataset contains many reviews, all labeled, and is used to both train and test the model.</p>
+      The given dataset contains 11914 reviews, all labeled, and is used to both train and test the model. The training set comprises 80% of the dataset, 
+      while the test set consists of the remaining 20%.</p>
 
-    <p>First, to create the model, we iterate through all the test documents to determine the likelhoods and priors. 
+    <p>First, to create the model, we iterate through all the training documents to determine the likelhoods and priors. 
       The following formulas were implemented in Python as the function train_nb(documents, labels):</p>
 
     <h5>Prior</h5>
@@ -48,6 +49,11 @@
     \]
     <p>where \(n_{k,j}\) is the number of times \(w_k\) occurs in documents of class \(c_j\),
       \(n_j\) is the total number of words in documents of class \(c_j\), and \(|V|\) is the size of the vocabulary.</p>
+
+    <p>After training, the total vocabulary count was 52392 distinct words, which is a good collection, 
+      even though punctuations and contractions were counted as well.</p>
+
+    <hr class="short">
 
     <p>Following the Naive-Bayes implementation, another function, def classify_nb(document, P_c, P_w_c), was created to calculate the posterior of a document 
       belonging to a given class:</p>
@@ -83,10 +89,12 @@
     <p>The word "fun" scores decently for "pos". The word "great" was run for both positive and negative. 
       The scores overall are higher than "fun", but the positive score is even higher. 
       This makes sense because "great" is often used to describe things, both positive and negative, 
-      maybe as a "great disappointed" or as a "great time". HOwever, you can describe things to just be "great", which is positive, 
+      maybe as a "great disappointed" or as a "great time". However, you can describe things to just be "great", which is positive, 
       so it makes sense that the positve score is higher. "bad" scores higher for "neg" which is expected. 
       ["a", "top-quality", "performance"] was mainly run to ensure the code doesn't crash, but it also has a stronger score for "pos", which is expected.</p>
     <p>So overall, the Naive-Bayes implementation and trained model seem to be reasonable.</p>
+
+    <hr class="short">
 
     <p>Once the implementation was verified, another function, classify_documents(docs, P_c, P_w_c),
        was created to explicitly classify documents as "pos" or "neg", using the functions above. 
@@ -110,14 +118,16 @@
     <p>Finally, we run the set of test documents through the NB model and compare the results with the actual classifications of the documents.</p>
     <h5>Overall, the accuracy of the model was 81.54%.</h5>
 
+    <hr class="short">
+
     <h4>Error Analysis</h4>
-    <p>An 81.54% accuracy is okay for what this model is. However, Naive-Bayes has pitfalls. 
+    <p>An 81.54% accuracy is okay for what this model is. Naive-Bayes has pitfalls. 
       All it does is count the number of words in a document to establish probabilities. 
       No significance is given to the order of words, or the meanings of sentences.</p>
 
-    <p>For examples, one of the documents it misclassified was the following:</p>
+    <p>For example, one of the documents it misclassified was the following:</p>
 
-    <p style="margin-left: 2em;">"i agree with other reviewers that it feels good and does n't smell too much , 
+    <p style="margin-left: 2em; font-style: italic;">"i agree with other reviewers that it feels good and does n't smell too much , 
       however , i 've experimented with it several times to confirm my findings , 
       and it turns out to give me really bad blackheads . i 'm 25 with an oily t-zone and very dry facial skin . 
       on mornings after using this cream , i have nasty blackheads on my forehead and chin . 
@@ -130,9 +140,9 @@
       it makes sense that the misclassification happened with close probabilities. We know the review is negative 
       because we understand the meaning of the person's experience with the product.</p>
 
-    <p>Another examples is this one:</p>
+    <p>Another example is this one:</p>
 
-    <p style="margin-left: 2em;">"the video editing capability is tough to deal with and not impressive when you figure it out . 
+    <p style="margin-left: 2em; font-style: italic;">"the video editing capability is tough to deal with and not impressive when you figure it out . 
       the tools are not explained and there is n't as much to do with it as they imply . 
       may be nice for birthday party editing , i do n't know . i did n't like it . 
       it 's not worth $100. the other capabilities might be nice , but from what i 've dealt with , that 's not the case" </p>
@@ -143,7 +153,7 @@
 
     <p>Finally, here's a case that was strongly misclassified as negative for an interesting reason:</p>
 
-    <p style="margin-left: 2em;">"maybe it 's because i was upgrading from an older version - - 2002 - - 
+    <p style="margin-left: 2em; font-style: italic;">"maybe it 's because i was upgrading from an older version - - 2002 - - 
       but i found the new features to be very good . for example.. . the junk mail feature works better 
       than any other i have used . it was catching junk from the very beginning , and has missed very few things . 
       i have only had one thing put in the junk folder that was not junk email . also the security features are far 
