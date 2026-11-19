@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assignment 4</title>
     <link rel="stylesheet" href="../style.css">
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
   </head>
 
   <body>
@@ -19,5 +25,145 @@
       </nav>
       <h1>Assignment 4</h1>
     </header>
+
+    <h2>Naive-Bayes Classification of Text Documents</h2>
+
+    <p>In this assignment, a simple Naive-Bayes model was created to classify review text documents as positive or negative. 
+      A given dataset contains many reviews, all labeled, and is used to both train and test the model.</p>
+
+    <p>First, to create the model, we iterate through all the test documents to determine the likelhoods and priors. 
+      The following formulas were implemented in Python as the function train_nb(documents, labels):</p>
+
+    <h5>Prior</h5>
+    <p>The log probability of each class \(c_j\) occurring:</p>
+    \[
+      \log P(c_j) = \log \frac{N_{c_j}}{N}
+    \]
+    <p>where \(N_{c_j}\) is the number of training documents labeled \(c_j\) and \(N\) is the total number of training documents.</p>
+
+    <h5>Likelihood</h5>
+    <p>The Laplace-smoothed log probability of each word \(w_k\) given class \(c_j\):</p>
+    \[
+      \log P(w_k \mid c_j) = \log \frac{n_{k,j} + 1}{n_j + |V|}
+    \]
+    <p>where \(n_{k,j}\) is the number of times \(w_k\) occurs in documents of class \(c_j\),
+      \(n_j\) is the total number of words in documents of class \(c_j\), and \(|V|\) is the size of the vocabulary.</p>
+
+    <p>Following the Naive-Bayes implementation, another function, def classify_nb(document, P_c, P_w_c), was created to calculate the posterior of a document 
+      belonging to a given class:</p>
+
+    <h5>Posterior</h5>
+    \[
+      P(c_j \mid d) \propto P(c_j) \prod_{k=1}^{|d|} P(w_k \mid c_j)
+    \]
+    <p>In log space, the product becomes a sum:</p>
+    \[
+      \log P(c_j \mid d) = \log P(c_j) + \sum_{k=1}^{|d|} \log P(w_k \mid c_j)
+    \]
+    <p>where \(d\) is the document and \(w_k\) is the \(k\)-th word in \(d\).</p>
+
+    <p>As a sanity check for the implementation, multiple short documents are scored with given labels and trained model. 
+      The table below summarizes these tests:</p>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>Document</th><th>Label</th><th>Score</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>["fun"]</td><td>pos</td><td>0.01953%</td></tr>
+        <tr><td>["great"]</td><td>neg</td><td>0.05284%</td></tr>
+        <tr><td>["great"]</td><td>pos</td><td>0.1321%</td></tr>
+        <tr><td>["bad"]</td><td>neg</td><td>0.04547%</td></tr>
+        <tr><td>["bad"]</td><td>pos</td><td>0.01723%</td></tr>
+        <tr><td>["a", "top-quality", "performance"]</td><td>pos</td><td>0.0002739%</td></tr>
+        <tr><td>["a", "top-quality", "performance"]</td><td>neg</td><td>0.0001389%</td></tr>
+      </tbody>
+    </table>
+
+    <p>The word "fun" scores decently for "pos". The word "great" was run for both positive and negative. 
+      The scores overall are higher than "fun", but the positive score is even higher. 
+      This makes sense because "great" is often used to describe things, both positive and negative, 
+      maybe as a "great disappointed" or as a "great time". HOwever, you can describe things to just be "great", which is positive, 
+      so it makes sense that the positve score is higher. "bad" scores higher for "neg" which is expected. 
+      ["a", "top-quality", "performance"] was mainly run to ensure the code doesn't crash, but it also has a stronger score for "pos", which is expected.</p>
+    <p>So overall, the Naive-Bayes implementation and trained model seem to be reasonable.</p>
+
+    <p>Once the implementation was verified, another function, classify_documents(docs, P_c, P_w_c),
+       was created to explicitly classify documents as "pos" or "neg", using the functions above. 
+       Again, it was run with small documents as a sanity check. The tests are summarized in the table below:</p>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>Document</th><th>Classification</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>["great"]</td><td>pos</td></tr>
+        <tr><td>["fantastic"]</td><td>pos</td></tr>
+        <tr><td>["bad"]</td><td>neg</td></tr>
+        <tr><td>["absolute"]</td><td>pos</td></tr>
+        <tr><td>["boring"]</td><td>neg</td></tr>
+      </tbody>
+    </table>
+
+    <p>The results are all quite reasonable.</p>
+
+    <p>Finally, we run the set of test documents through the NB model and compare the results with the actual classifications of the documents.</p>
+    <h5>Overall, the accuracy of the model was 81.54%.</h5>
+
+    <h4>Error Analysis</h4>
+    <p>An 81.54% accuracy is okay for what this model is. However, Naive-Bayes has pitfalls. 
+      All it does is count the number of words in a document to establish probabilities. 
+      No significance is given to the order of words, or the meanings of sentences.</p>
+
+    <p>For examples, one of the documents it misclassified was the following:</p>
+
+    <p style="margin-left: 2em;">"i agree with other reviewers that it feels good and does n't smell too much , 
+      however , i 've experimented with it several times to confirm my findings , 
+      and it turns out to give me really bad blackheads . i 'm 25 with an oily t-zone and very dry facial skin . 
+      on mornings after using this cream , i have nasty blackheads on my forehead and chin . 
+      there are better products out there"</p>
+    
+    <p>The model classified it as positive, while it's actually negative. 
+      The log score for positive is -517.2, and the negative score is -522.3, which was a close comparison. 
+      It's easy to see why it got confused: The document contains positive phrases like "I agree", "feels good" and "better", 
+      as well as negative ones like "really bad" and "nasty". For a model that just compares word occurence, 
+      it makes sense that the misclassification happened with close probabilities. We know the review is negative 
+      because we understand the meaning of the person's experience with the product.</p>
+
+    <p>Another examples is this one:</p>
+
+    <p style="margin-left: 2em;">"the video editing capability is tough to deal with and not impressive when you figure it out . 
+      the tools are not explained and there is n't as much to do with it as they imply . 
+      may be nice for birthday party editing , i do n't know . i did n't like it . 
+      it 's not worth $100. the other capabilities might be nice , but from what i 've dealt with , that 's not the case" </p>
+
+    <p>The negative score was -495.3 and the positive score was -493.5. Again, very close, but it was classified as positive even though it's negative.
+      With a combination of positive words like "impressive" and "nice", and negative ones like "not", the confusion makes sense.
+    </p>
+
+    <p>Finally, here's a case that was strongly misclassified as negative for an interesting reason:</p>
+
+    <p style="margin-left: 2em;">"maybe it 's because i was upgrading from an older version - - 2002 - - 
+      but i found the new features to be very good . for example.. . the junk mail feature works better 
+      than any other i have used . it was catching junk from the very beginning , and has missed very few things . 
+      i have only had one thing put in the junk folder that was not junk email . also the security features are far 
+      superior to the 2002 version . and the calendar is more flexible and easier to use . installation was seemless . 
+      i think it might be a little overpriced , but considering how long i will keep it , it 's not too bad" </p>
+
+    <p>The word "junk" was used many times, which in the context of reviews is usually negative, but in this case, 
+      it was actually just referring to junk email. And even though the review is mostly positive, there are some listed cons
+      using words like "overpriced" and "bad". So even with positive words in the review, like "good", "superior" and "easier", 
+      it wasn't enough to sway the model with the many occurances of "junk". Another interesting point is that normally, 
+      the word "seamless" would be considered positive, but it was misspelled in this review, so the model likely didn't count it as positive, 
+      if it even counted it at all. This reveals another weakness of Naive-Bayes - there's little tolerance for misspellings - 
+      typos can't be grouped as the same word because the model can't tell.
+      The positive log score was -803.1, while the negative score was -792.2 - significantly lower. So the review was
+       misclassified as negative, and the model was confident about it.</p>
+
+    <p>Overall, the Naive-Bayes classifier usually gets the answer right, but when it doesn't, it's usually because it 
+      lacks context as to why the words were used the way they were. It cannot understand meaning, which is often 
+      important when analyzing text, even if it's just for broad classifications.</p>
+
+    <hr>
   </body>
 </html>
